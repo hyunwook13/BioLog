@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		06785665B3F35026B704846F /* Pods_BioLogTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A45E9B741626B0179DE5ED89 /* Pods_BioLogTests.framework */; };
+		5A573836DD02FD99E7059A11 /* Pods_BioLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D3239E9431E7D018C41B360 /* Pods_BioLog.framework */; };
+		B913D8694D3BBF878FBA7E70 /* Pods_BioLogUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A32A717897B40F9DA76417D9 /* Pods_BioLogUITests.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		7C21A9F62D6CB280006A1489 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,9 +30,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2D3239E9431E7D018C41B360 /* Pods_BioLog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BioLog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		38E59D657A685A3190FA51F2 /* Pods-BioLogUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BioLogUITests.release.xcconfig"; path = "Target Support Files/Pods-BioLogUITests/Pods-BioLogUITests.release.xcconfig"; sourceTree = "<group>"; };
+		43598BEE5CAC6AA60688581D /* Pods-BioLogTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BioLogTests.debug.xcconfig"; path = "Target Support Files/Pods-BioLogTests/Pods-BioLogTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7C21A9DB2D6CB27E006A1489 /* BioLog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BioLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C21A9F52D6CB280006A1489 /* BioLogTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BioLogTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C21A9FF2D6CB280006A1489 /* BioLogUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BioLogUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A32A717897B40F9DA76417D9 /* Pods_BioLogUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BioLogUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A45E9B741626B0179DE5ED89 /* Pods_BioLogTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BioLogTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BD1EB865CD26E150FAF038C0 /* Pods-BioLogUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BioLogUITests.debug.xcconfig"; path = "Target Support Files/Pods-BioLogUITests/Pods-BioLogUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		CCCDA405256CF394FCA9FF21 /* Pods-BioLog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BioLog.debug.xcconfig"; path = "Target Support Files/Pods-BioLog/Pods-BioLog.debug.xcconfig"; sourceTree = "<group>"; };
+		D2FB9DDB43AD177DD5368B9A /* Pods-BioLogTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BioLogTests.release.xcconfig"; path = "Target Support Files/Pods-BioLogTests/Pods-BioLogTests.release.xcconfig"; sourceTree = "<group>"; };
+		DACBBCA4EA41E6A190F89996 /* Pods-BioLog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BioLog.release.xcconfig"; path = "Target Support Files/Pods-BioLog/Pods-BioLog.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -50,11 +65,15 @@
 		};
 		7C21A9F82D6CB280006A1489 /* BioLogTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = BioLogTests;
 			sourceTree = "<group>";
 		};
 		7C21AA022D6CB280006A1489 /* BioLogUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = BioLogUITests;
 			sourceTree = "<group>";
 		};
@@ -65,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A573836DD02FD99E7059A11 /* Pods_BioLog.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06785665B3F35026B704846F /* Pods_BioLogTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,12 +100,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B913D8694D3BBF878FBA7E70 /* Pods_BioLogUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		085F8AF745EEA4542F01AF29 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2D3239E9431E7D018C41B360 /* Pods_BioLog.framework */,
+				A45E9B741626B0179DE5ED89 /* Pods_BioLogTests.framework */,
+				A32A717897B40F9DA76417D9 /* Pods_BioLogUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4C9AF60C44D09DB05117CE62 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CCCDA405256CF394FCA9FF21 /* Pods-BioLog.debug.xcconfig */,
+				DACBBCA4EA41E6A190F89996 /* Pods-BioLog.release.xcconfig */,
+				43598BEE5CAC6AA60688581D /* Pods-BioLogTests.debug.xcconfig */,
+				D2FB9DDB43AD177DD5368B9A /* Pods-BioLogTests.release.xcconfig */,
+				BD1EB865CD26E150FAF038C0 /* Pods-BioLogUITests.debug.xcconfig */,
+				38E59D657A685A3190FA51F2 /* Pods-BioLogUITests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		7C21A9D22D6CB27E006A1489 = {
 			isa = PBXGroup;
 			children = (
@@ -92,6 +138,8 @@
 				7C21A9F82D6CB280006A1489 /* BioLogTests */,
 				7C21AA022D6CB280006A1489 /* BioLogUITests */,
 				7C21A9DC2D6CB27E006A1489 /* Products */,
+				4C9AF60C44D09DB05117CE62 /* Pods */,
+				085F8AF745EEA4542F01AF29 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -112,9 +160,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7C21AA082D6CB280006A1489 /* Build configuration list for PBXNativeTarget "BioLog" */;
 			buildPhases = (
+				D567702D9A06AC60A89D4BAD /* [CP] Check Pods Manifest.lock */,
 				7C21A9D72D6CB27E006A1489 /* Sources */,
 				7C21A9D82D6CB27E006A1489 /* Frameworks */,
 				7C21A9D92D6CB27E006A1489 /* Resources */,
+				221F258DACC7E98716AD8AB0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -124,8 +174,6 @@
 				7C21A9DD2D6CB27E006A1489 /* BioLog */,
 			);
 			name = BioLog;
-			packageProductDependencies = (
-			);
 			productName = BioLog;
 			productReference = 7C21A9DB2D6CB27E006A1489 /* BioLog.app */;
 			productType = "com.apple.product-type.application";
@@ -134,9 +182,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7C21AA0D2D6CB280006A1489 /* Build configuration list for PBXNativeTarget "BioLogTests" */;
 			buildPhases = (
+				0F48EB0CCCE3FBD660E4E043 /* [CP] Check Pods Manifest.lock */,
 				7C21A9F12D6CB280006A1489 /* Sources */,
 				7C21A9F22D6CB280006A1489 /* Frameworks */,
 				7C21A9F32D6CB280006A1489 /* Resources */,
+				229EEFAF6E74A13575AE028A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -147,8 +197,6 @@
 				7C21A9F82D6CB280006A1489 /* BioLogTests */,
 			);
 			name = BioLogTests;
-			packageProductDependencies = (
-			);
 			productName = BioLogTests;
 			productReference = 7C21A9F52D6CB280006A1489 /* BioLogTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -157,6 +205,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7C21AA102D6CB280006A1489 /* Build configuration list for PBXNativeTarget "BioLogUITests" */;
 			buildPhases = (
+				90424B3DAA9B89021ED23C8C /* [CP] Check Pods Manifest.lock */,
 				7C21A9FB2D6CB280006A1489 /* Sources */,
 				7C21A9FC2D6CB280006A1489 /* Frameworks */,
 				7C21A9FD2D6CB280006A1489 /* Resources */,
@@ -170,8 +219,6 @@
 				7C21AA022D6CB280006A1489 /* BioLogUITests */,
 			);
 			name = BioLogUITests;
-			packageProductDependencies = (
-			);
 			productName = BioLogUITests;
 			productReference = 7C21A9FF2D6CB280006A1489 /* BioLogUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -244,6 +291,109 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		0F48EB0CCCE3FBD660E4E043 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BioLogTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		221F258DACC7E98716AD8AB0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BioLog/Pods-BioLog-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BioLog/Pods-BioLog-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BioLog/Pods-BioLog-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		229EEFAF6E74A13575AE028A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BioLogTests/Pods-BioLogTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BioLogTests/Pods-BioLogTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BioLogTests/Pods-BioLogTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		90424B3DAA9B89021ED23C8C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BioLogUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D567702D9A06AC60A89D4BAD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BioLog-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		7C21A9D72D6CB27E006A1489 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -284,6 +434,7 @@
 /* Begin XCBuildConfiguration section */
 		7C21AA092D6CB280006A1489 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CCCDA405256CF394FCA9FF21 /* Pods-BioLog.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -313,6 +464,7 @@
 		};
 		7C21AA0A2D6CB280006A1489 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DACBBCA4EA41E6A190F89996 /* Pods-BioLog.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -461,6 +613,7 @@
 		};
 		7C21AA0E2D6CB280006A1489 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 43598BEE5CAC6AA60688581D /* Pods-BioLogTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -480,6 +633,7 @@
 		};
 		7C21AA0F2D6CB280006A1489 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D2FB9DDB43AD177DD5368B9A /* Pods-BioLogTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -499,6 +653,7 @@
 		};
 		7C21AA112D6CB280006A1489 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BD1EB865CD26E150FAF038C0 /* Pods-BioLogUITests.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -516,6 +671,7 @@
 		};
 		7C21AA122D6CB280006A1489 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 38E59D657A685A3190FA51F2 /* Pods-BioLogUITests.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
