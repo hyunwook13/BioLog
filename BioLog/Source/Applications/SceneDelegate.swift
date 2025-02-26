@@ -15,7 +15,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = MainViewController() // 자신의 시작 ViewController
+        
+        let nav = UINavigationController()
+        nav.setNavigationBarHidden(true, animated: false)
+        
+        let appDIContainer = AppDIContainer()
+        AppCoordinator(nav: nav, appDIContainer).start()
+        window.rootViewController = nav
         window.makeKeyAndVisible()
         self.window = window
     }

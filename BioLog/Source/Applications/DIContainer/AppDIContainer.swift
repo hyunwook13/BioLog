@@ -1,22 +1,25 @@
 //
 //  AppDIContainer.swift
-//  HaloGlow
+//  BioLog
 //
-//  Created by 이현욱 on 1/21/25.
+//  Created by 이현욱 on 2/25/25.
 //
 
 import Foundation
 
 final class AppDIContainer {
-    func makeMissionsDiContainer() -> MissionsDIContainer {
-        return MissionsDIContainer()
+    
+    let bookUseCase: BookUseCaseAble
+    
+    init() {
+        self.bookUseCase = BookUseCase(repo: BookRepository(client: ClientImpl()))
     }
     
-    func makeDailyTaskDiContainer() -> DailyTaskDIContainer {
-        return DailyTaskDIContainer()
+    func makeMainDiContainer() -> MainDiContainer {
+        return MainDiContainer(bookUseCase: bookUseCase)
     }
     
-    func makeChartDIContainer() -> ChartDIContainer {
-        return ChartDIContainer()
+    func makeBookshelfDIContainer() -> BookshelfDIContainer {
+        return BookshelfDIContainer()
     }
 }
