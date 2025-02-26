@@ -11,6 +11,7 @@ PODS:
     - RxSwift (= 6.7.1)
   - SnapKit (5.7.1)
   - SwiftLint (0.57.0)
+  - XMLCoder (0.14.0)
 
 DEPENDENCIES:
   - RxBlocking
@@ -19,6 +20,7 @@ DEPENDENCIES:
   - RxTest
   - SnapKit
   - SwiftLint
+  - XMLCoder
 
 SPEC REPOS:
   trunk:
@@ -29,6 +31,7 @@ SPEC REPOS:
     - RxTest
     - SnapKit
     - SwiftLint
+    - XMLCoder
 
 SPEC CHECKSUMS:
   RxBlocking: 48b86e3ed2a9a19150491e8dc5409973baac2eb1
@@ -38,7 +41,8 @@ SPEC CHECKSUMS:
   RxTest: eec2bff159d799cdc02da2b40ef47e43dc17e688
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   SwiftLint: eb47480d47c982481592c195c221d11013a679cc
+  XMLCoder: 0199b725702f32aa3190a88ea2f6fb4847bfe1d1
 
-PODFILE CHECKSUM: 88264af91a2378412c6fc345031857e73c4e8eeb
+PODFILE CHECKSUM: 3a71e5bd46a5a9ba35f3df8d2a0b22ad668e338b
 
 COCOAPODS: 1.16.2

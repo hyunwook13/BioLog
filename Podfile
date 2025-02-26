@@ -12,6 +12,8 @@ target 'BioLog' do
 
   pod 'SwiftLint'
 
+  pod 'XMLCoder'
+
   target 'BioLogTests' do
     inherit! :search_paths
     pod 'RxBlocking'
