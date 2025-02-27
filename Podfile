@@ -7,12 +7,11 @@ target 'BioLog' do
 
   pod 'RxSwift'
   pod 'RxCocoa'
-
+  pod 'RxViewController'
+  pod 'RxDataSources'  
   pod 'SnapKit'
 
   pod 'SwiftLint'
-
-  pod 'XMLCoder'
 
   target 'BioLogTests' do
     inherit! :search_paths
