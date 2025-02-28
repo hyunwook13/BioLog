@@ -19,9 +19,9 @@ protocol BookService {
     
 }
 
-protocol Provider {
-    func makeClient(_ config: Config) -> Client
-}
+//protocol Provider {
+//    func makeClient(_ config: Config) -> Client
+//}
 
 //class ServiceImpl: Service {
 //    let provider: Provider
@@ -40,26 +40,26 @@ protocol Provider {
 //}
 
 
-class BookServiceImpl: BookService {
-    let provider: Provider
-    
-        init(provider: Provider) {
-            self.provider = provider
-        }
-    
-    
-    
-    func fetchBooks(with id: String) -> [BookDTO] {
-        let client = provider.makeClient(Config.searchBook)
-        
-        BookAPI.searchBooks(title: id).asEndpoint().
-        
-        Task {
-            do {
-                let data = try await client.request(with: APIEndpoints.getBooksInfo(with: id))
-            } catch {
-                
-            }
-        }
-    }
-}
+//class BookServiceImpl: BookService {
+//    let provider: Provider
+//    
+//        init(provider: Provider) {
+//            self.provider = provider
+//        }
+//    
+//    
+//    
+//    func fetchBooks(with id: String) -> [BookDTO] {
+//        let client = provider.makeClient(Config.searchBook)
+//        
+//        BookAPI.searchBooks(title: id).asEndpoint().
+//        
+//        Task {
+//            do {
+//                let data = try await client.request(with: APIEndpoints.getBooksInfo(with: id))
+//            } catch {
+//                
+//            }
+//        }
+//    }
+//}

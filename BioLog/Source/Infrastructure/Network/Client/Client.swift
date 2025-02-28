@@ -13,16 +13,14 @@ protocol Client {
 }
 
 class ClientImpl: Client {
-    private let config: Config
     let session: URLSessionable
     
-    init(config: Config, session: URLSessionable = URLSession.shared) {
+    init(session: URLSessionable = URLSession.shared) {
         self.session = session
-        self.config = config
     }
     
     func request<E: RequesteResponsable>(with endpoint: E) async throws -> Data {
-        let urlRequest = try endpoint.getUrlRequest(config)
+        let urlRequest = try endpoint.getUrlRequest()
         
         let (data,response) = try await session.data(for: urlRequest)
         guard let response = response as? HTTPURLResponse else {
@@ -37,7 +35,7 @@ class ClientImpl: Client {
     }
     
     func request<R: Decodable, E: RequesteResponsable>(with endpoint: E) async throws -> R where E.Response == R {
-        let urlRequest = try endpoint.getUrlRequest(config)
+        let urlRequest = try endpoint.getUrlRequest()
         
         guard let (data,response) = try? await session.data(for: urlRequest) else { throw NetworkError.unknownError }
         guard let response = response as? HTTPURLResponse else {
@@ -66,5 +64,55 @@ extension Encodable {
         let data = try JSONEncoder().encode(self)
         let jsonData = try JSONSerialization.jsonObject(with: data)
         return jsonData as? [String: Any]
+    }
+}
+
+// XMLParserDelegate 구현
+class BooksXMLParser: NSObject, XMLParserDelegate {
+    var books: [BookDTO] = []
+    private var currentElement: String = ""
+    private var currentTitle: String = ""
+    private var currentAuthor: String = ""
+    
+    let element = "item"
+    
+    // 시작 태그를 만났을 때
+    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
+        currentElement = elementName
+        
+        
+        
+        if elementName == element {
+            
+            currentTitle = ""
+            currentAuthor = ""
+        }
+    }
+    
+    // 태그 사이의 문자열을 만났을 때
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
+        
+        let trimmedString = string.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard !trimmedString.isEmpty else { return }
+        
+        print("string: ",string)
+        print("trimmedString", trimmedString)
+        
+        if currentElement == "author_info" {
+            currentTitle += trimmedString
+            // 새로운 책 객체 시작 시 초기화
+            print(trimmedString)
+        } else if currentElement == "author" {
+            currentAuthor += trimmedString
+        }
+    }
+    
+    // 종료 태그를 만났을 때
+    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+        if elementName == element {
+            //            let book = Book(title: currentTitle, author: currentAuthor)
+            //            books.append(book)
+        }
     }
 }

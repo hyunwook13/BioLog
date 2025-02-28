@@ -9,41 +9,48 @@ import Foundation
 
 enum BookAPI {
     case searchBooks(title: String)
+    case fetchNewBooks
+    
+    var baseURL: String {
+        switch self {
+        case .searchBooks, .fetchNewBooks:
+            return "http://www.aladin.co.kr/ttb/api/"
+        }
+    }
 }
 
 extension BookAPI {
-    func asEndpoint<T: Decodable>() -> Endpoint<T> {
+    func typedEndpoint<R>() -> Endpoint<R> {
         switch self {
         case .searchBooks(let title):
-            return Endpoint<T>(
-                path: "books/search",
+            return Endpoint<R>(
+                baseURL: baseURL,
+                path: "ItemSearch.aspx",
                 method: .get,
-                queryParameters: ["q": query, "page": String(page)]
+                queryParameters: [
+                    "ttbkey": Constant.key,
+                    "Query": title,
+                    "Cover": "MidBig",
+                    "QueryType": "Title",
+                    "output":"js",
+                    "Version":"20131101"
+                ]
             )
             
-//        case .detail(let id):
-//            return Endpoint<T>(
-//                path: "books/\(id)",
-//                method: .get
-//            )
-//            
-//        case .relatedBooks(let id, let limit):
-//            return Endpoint<T>(
-//                path: "books/\(id)/related",
-//                method: .get,
-//                queryParameters: ["limit": String(limit)]
-//            )
-//            
-//        case .newReleases(let category, let limit):
-//            var params: [String: String] = ["limit": String(limit)]
-//            if let category = category {
-//                params["category"] = category
-//            }
-//            return Endpoint<T>(
-//                path: "books/new-releases",
-//                method: .get,
-//                queryParameters: params
-//            )
+        case .fetchNewBooks:
+            return Endpoint<R>(
+                baseURL: baseURL,
+                path: "ItemList.aspx",
+                method: .get,
+                queryParameters: [
+                    "ttbkey": Constant.key,
+                    "output":"js",
+                    "Cover": "MidBig",
+                    "QueryType": "ItemNewAll",
+                    "Version":"20131101",
+                    "SearchTarget": "Book"
+                ]
+            )
         }
     }
 }

@@ -3,10 +3,14 @@
     <entity name="Book" representedClassName="Book" syncable="YES" codeGenerationType="class">
         <attribute name="author" optional="YES" attributeType="String"/>
         <attribute name="book_description" optional="YES" attributeType="String"/>
+        <attribute name="categoryName" optional="YES" attributeType="String"/>
+        <attribute name="cover" optional="YES" attributeType="String"/>
+        <attribute name="customerReviewRank" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="is_bookmarked" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="isbn" optional="YES" attributeType="String"/>
-        <attribute name="thumbnail" optional="YES" attributeType="Binary"/>
+        <attribute name="pubDate" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="characters" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Character" inverseName="book_info" inverseEntity="Character"/>
         <relationship name="history" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ReadingHistory" inverseName="book_info" inverseEntity="ReadingHistory"/>
         <relationship name="notes" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Note" inverseName="book_info" inverseEntity="Note"/>

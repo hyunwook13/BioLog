@@ -12,7 +12,7 @@ final class AppDIContainer {
     let bookUseCase: BookUseCaseAble
     
     init() {
-        self.bookUseCase = BookUseCase(repo: BookRepository(client: ClientImpl()))
+        self.bookUseCase = BookUseCase(repo: BookRepositoryImpl(client: ClientImpl()))
     }
     
     func makeMainDiContainer() -> MainDiContainer {

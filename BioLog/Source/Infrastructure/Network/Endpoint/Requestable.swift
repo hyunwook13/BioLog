@@ -2,13 +2,13 @@
 //  Requestable.swift
 //  HaloGlow
 //
-//  Created by 이현욱 on 1/3/25.
+//  Created by 이현욱 on 2/25/25.
 //
 
 import Foundation
 
 protocol Requestable {
-//    var baseURL: String { get }
+    var baseURL: String { get }
     var path: String { get }
     var method: HttpMethod { get }
     var queryParameters: Encodable? { get }
@@ -18,8 +18,8 @@ protocol Requestable {
 }
 
 extension Requestable {
-    func getUrlRequest(_ config: Config) throws -> URLRequest {
-        let url = try url(config.baseURL)
+    func getUrlRequest() throws -> URLRequest {
+        let url = try url()
         var urlRequest = URLRequest(url: url)
 
         // httpBody
@@ -27,23 +27,18 @@ extension Requestable {
             if !bodyParameters.isEmpty {
                 urlRequest.httpBody = try? JSONSerialization.data(withJSONObject: bodyParameters)
             }
-            
         }
 
         // httpMethod
         urlRequest.httpMethod = method.rawValue
-        
-        urlRequest.timeoutInterval = config.timeoutInterval
 
-        config.headers.forEach { urlRequest.setValue($1, forHTTPHeaderField: $0) }
-        
         // header
         headers?.forEach { urlRequest.setValue($1, forHTTPHeaderField: $0) }
-        
+
         return urlRequest
     }
 
-    func url(_ baseURL: String) throws -> URL {
+    func url() throws -> URL {
 
         // baseURL + path
         let fullPath = "\(baseURL)\(path)"

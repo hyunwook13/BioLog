@@ -12,13 +12,15 @@ import RxCocoa
 
 protocol BookUseCaseAble {
     func search(title: String) -> Single<[BookDTO]>
-//    func save(with book: BookDTO) -> Observable<[BookDTO]>
-}
+    func save(with book: BookDTO) -> Single<BookDTO>
+    func fetchNewBooks() -> Single<[BookDTO]>
+    func fetchReadingBooks() -> Single<[BookDTO]>
+ }
 
 final class BookUseCase: BookUseCaseAble {
-    private let repo: BookRepositoryAble
+    private let repo: BookRepository
     
-    init(repo: BookRepositoryAble) {
+    init(repo: BookRepository) {
         self.repo = repo
     }
     
@@ -26,7 +28,15 @@ final class BookUseCase: BookUseCaseAble {
         return repo.findBooks(byTitle: title)
     }
     
-//    func save(with book: BookDTO) -> Observable<[BookDTO]> {
-//        return repo.save(with: book)
-//    }
+    func save(with book: BookDTO) -> Single<BookDTO> {
+        return repo.save(with: book).asSingle()
+    }
+    
+    func fetchNewBooks() -> Single<[BookDTO]> {
+        return repo.fetchNewBooks()
+    }
+    
+    func fetchReadingBooks() -> Single<[BookDTO]> {
+        return repo.fetchNewBooks()
+    }
 }
