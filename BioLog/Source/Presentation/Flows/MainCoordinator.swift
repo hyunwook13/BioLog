@@ -1,14 +1,16 @@
 //
 //  MainCoordinator.swift
-//  HaloGlow
+//  BioLog
 //
-//  Created by 이현욱 on 1/21/25.
+//  Created by 이현욱 on 2/25/25.
 //
 
 import UIKit
 
-struct MissionsViewModelActions {
-//    let showMovieDetails: (MissionImpl) -> Void
+
+struct MainAction {
+    let add: () -> Void
+    let selectedBook: (BookDTO) -> Void
 }
 
 final class MainCoordinator: Coordinator {
@@ -24,19 +26,27 @@ final class MainCoordinator: Coordinator {
     }
     
     func start() {
-//        let actions = MissionsViewModelActions(showMovieDetails: presentToDaliyVC)
-        let vc = container.makeMainViewController()
+        let actions = MainAction(
+            add: presentSearchBookVC,
+            selectedBook: dismissWithBook
+        )
+        let vc = container.makeMainViewController(actions)
         nav.setViewControllers([vc], animated: false)
     }
     
-//    private func presentToDaliyVC(_ selectedData: MissionImpl) {
-////        let dailyTaskDIContainer = container.makeDailyTaskDiContainer(mission: selectedData)
-////        let vc = dailyTaskDIContainer.makeDailyTasksViewController(mission: selectedData)
-////        let childCoor = dailyTaskDIContainer.makeDailyTasksCoordinator(nav: nav)
-////        
-////        self.childCoordinators.append(childCoor)
-////        childCoor.start()
-////        vc.modalPresentationStyle = .fullScreen
-////        nav.present(vc, animated: true)
-//    }
+    private func presentSearchBookVC() {
+        let searchBookDIContainer = container.makeSearchBookDIContainer()
+        let childCoor = searchBookDIContainer.makeSearchBookCoordinator(nav: nav)
+        
+//        childCoor.didSelectData = {
+//            nav.topViewController
+//        }
+        
+        self.childCoordinators.append(childCoor)
+        childCoor.start()
+    }
+    
+    private func dismissWithBook(_ book: BookDTO) {
+        
+    }
 }

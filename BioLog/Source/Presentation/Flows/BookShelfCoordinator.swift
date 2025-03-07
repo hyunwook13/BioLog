@@ -1,8 +1,8 @@
 //
-//  ChartCoordinator.swift
-//  HaloGlow
+//  BookShelfCoordinator.swift
+//  BioLog
 //
-//  Created by 이현욱 on 1/23/25.
+//  Created by 이현욱 on 2/25/25.
 //
 
 import UIKit

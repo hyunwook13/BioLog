@@ -1,97 +1,187 @@
 //
-//  ViewController.swift
+//  MainViewController.swift
 //  BioLog
 //
 //  Created by 이현욱 on 2/24/25.
 //
 
 import UIKit
+
 import SnapKit
+import RxSwift
+import RxCocoa
+import RxViewController
+import RxDataSources
 
 class MainViewController: UIViewController {
     
-    // 메인 콜렉션 뷰 (전체 화면에 2개 섹션)
+    private let disposeBag = DisposeBag()
+    private let viewModel: MainViewModelAble
+    
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 16
-        layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
         
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.backgroundColor = .white
-        cv.dataSource = self
+        cv.backgroundColor = .systemBackground
         cv.delegate = self
         cv.register(NestedCollectionCell.self, forCellWithReuseIdentifier: NestedCollectionCell.reuseIdentifier)
         cv.register(RecommendedBookCell.self, forCellWithReuseIdentifier: RecommendedBookCell.reuseIdentifier)
+        cv.register(
+            SectionHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: SectionHeaderView.identifier
+        )
         return cv
     }()
     
-    // 두번째 섹션에 사용할 샘플 데이터 (예: 추천 도서 제목)
-    private let recommendedItems: [String] = [
-        "Book A", "Book B", "Book C", "Book D", "Book E"
-    ]
+    
+    let addButton: UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage(systemName: "plus"), for: .normal)
+        return btn
+    }()
+    
+    init(vm: MainViewModelAble) {
+        self.viewModel = vm
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         
-        // 한 곳에서 subview 추가
+        settingView()
+        settingLayout()
+        bind()
+    }
+    
+    private func settingView() {
+        view.backgroundColor = .systemBackground
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        self.navigationItem.title = "어서오세요!"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: addButton)
+    }
+    
+    private func settingLayout() {
         view.addSubview(collectionView)
+        
         collectionView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
-}
-
-// MARK: - UICollectionViewDataSource
-extension MainViewController: UICollectionViewDataSource {
     
-    // 섹션 2개 구성
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+    private func bind() {
+        self.rx.viewWillAppear
+            .map { _ in Void() }
+            .bind(to: viewModel.viewWillAppear)
+            .disposed(by: disposeBag)
+        
+        addButton.rx.tap
+            .bind(to: viewModel.add)
+            .disposed(by: disposeBag)
+        
+        viewModel.book
+            .drive(collectionView.rx.items(dataSource: createDataSource()))
+            .disposed(by: disposeBag)
     }
     
-    // 섹션별 아이템 개수 지정
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 {
-            return 1  // 첫번째 섹션: 단 하나의 셀에 내부 콜렉션 뷰 포함
-        } else {
-            return recommendedItems.count // 두번째 섹션: 일반 셀들
-        }
-    }
-    
-    // 셀 구성
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
-        if indexPath.section == 0 {
-            // 첫번째 섹션: 내부 콜렉션 뷰가 포함된 셀
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NestedCollectionCell.reuseIdentifier, for: indexPath) as! NestedCollectionCell
-            // 내부 콜렉션 뷰에 표시할 데이터 (예: 가로 스크롤 아이템들)
-            cell.configure(with: ["Featured 1", "Featured 2", "Featured 3"])
-            return cell
-        } else {
-            // 두번째 섹션: 일반 셀
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendedBookCell.reuseIdentifier, for: indexPath) as! RecommendedBookCell
-//            cell.configure(text: recommendedItems[indexPath.item])
-            return cell
-        }
+    private func createDataSource() -> RxCollectionViewSectionedReloadDataSource<Section> {
+        return RxCollectionViewSectionedReloadDataSource<Section>(
+            configureCell: { dataSource, collectionView, indexPath, item in
+                switch item {
+                case .savedBooks(let books):
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NestedCollectionCell.reuseIdentifier, for: indexPath) as! NestedCollectionCell
+                    cell.configure(with: books)
+                    return cell
+                case .recommendedBook(let book):
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendedBookCell.reuseIdentifier, for: indexPath) as! RecommendedBookCell
+                    cell.configure(with: book)
+                    return cell
+                }
+            },
+            configureSupplementaryView: { dataSource, collectionView, kind, indexPath in
+                guard kind == UICollectionView.elementKindSectionHeader else {
+                    return UICollectionReusableView()
+                }
+                
+                let header = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: kind,
+                    withReuseIdentifier: SectionHeaderView.identifier,
+                    for: indexPath
+                ) as! SectionHeaderView
+                
+                let sectionTitle = dataSource.sectionModels[indexPath.section].title
+                header.configure(with: sectionTitle)
+                
+                return header
+            }
+        )
     }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension MainViewController: UICollectionViewDelegateFlowLayout {
-    
-    // 각 셀의 크기 지정
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.bounds.width - 32 // 좌우 inset(16+16) 고려
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        let width = collectionView.bounds.width // 좌우 inset(16+16) 고려
         if indexPath.section == 0 {
             // 첫번째 섹션: 내부 콜렉션 뷰 셀 (예시 높이 200)
             return CGSize(width: width, height: 200)
         } else {
             // 두번째 섹션: 일반 셀 (예시 높이 80)
-            return CGSize(width: width, height: 80)
+            return CGSize(width: width - 32, height: 116)
         }
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        referenceSizeForHeaderInSection section: Int
+    ) -> CGSize {
+        if section == 0 {
+            return CGSize(width: collectionView.frame.width, height: 70)
+            
+        } else {
+            return CGSize(width: collectionView.frame.width, height: 100)
+        }
+    }
+}
+
+class SectionHeaderView: UICollectionReusableView {
+    static let identifier = "SectionHeaderView"
+    
+    private let titleLabel = UILabel()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupViews()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupViews() {
+        addSubview(titleLabel)
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
+    }
+    
+    func configure(with title: String) {
+        titleLabel.text = title
     }
 }

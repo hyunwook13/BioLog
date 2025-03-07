@@ -1,8 +1,8 @@
 //
 //  AppCoordinator.swift
-//  HaloGlow
+//  BioLog
 //
-//  Created by 이현욱 on 1/21/25.
+//  Created by 이현욱 on 2/25/25.
 //
 
 import UIKit
@@ -42,26 +42,26 @@ final class AppCoordinator: Coordinator {
     // 탭을 생성하는 메서드로 관심사 분리
     private func makeTabs() -> (viewControllers: [UIViewController], coordinators: [Coordinator]) {
         // 각 DIContainer 초기화
-        let dailyDIContainer = container.makeDailyTaskDiContainer()
-        let chartDIContainer = container.makeChartDIContainer()
+        let mainDIContainer = container.makeMainDiContainer()
+        let bookShelfDIContainer = container.makeBookshelfDIContainer()
         
         // Daily 탭
-        let dailyNav = UINavigationController()
-        let dailyCoordinator = dailyDIContainer.makeDailyTasksCoordinator(nav: dailyNav)
+        let mainNav = UINavigationController()
+        let mainCoordinator = mainDIContainer.makeMainCoordinator(nav: mainNav)
         
         // Chart 탭
-        let chartNav = UINavigationController()
-        chartNav.setNavigationBarHidden(true, animated: false)
-        let chartCoordinator = chartDIContainer.makeChartCoordinator(nav: chartNav)
+        let bookShelfNav = UINavigationController()
+        bookShelfNav.setNavigationBarHidden(true, animated: false)
+        let bookShelfCoordinator = bookShelfDIContainer.makeBookShelfCoordinator(nav: bookShelfNav)
         
         return (
-            viewControllers: [dailyNav, chartNav],
-            coordinators: [dailyCoordinator, chartCoordinator]
+            viewControllers: [mainNav, bookShelfNav],
+            coordinators: [mainCoordinator, bookShelfCoordinator]
         )
     }
     
     private func settingTabs() {
         tabbar.viewControllers?[0].tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "house"), tag: 0)
-        tabbar.viewControllers?[1].tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "gear"), tag: 1)
+        tabbar.viewControllers?[1].tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "book.closed"), tag: 1)
     }
 }

@@ -14,21 +14,21 @@ class RecommendedBookCell: UICollectionViewCell {
     private let authorLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        label.textColor = .darkGray
+        label.textColor = .systemPlaceHolder
         return label
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.textColor = .black
+        label.font = UIFont.boldSystemFont(ofSize: 17)
+        label.textColor = .label
         return label
     }()
     
     private let summaryLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 13)
-        label.textColor = .gray
+        label.font = UIFont.systemFont(ofSize: 15)
+        label.textColor = .systemPlaceHolder
         label.numberOfLines = 2
         return label
     }()
@@ -46,7 +46,7 @@ class RecommendedBookCell: UICollectionViewCell {
         
         contentView.layer.cornerRadius = 8
         contentView.clipsToBounds = true
-        contentView.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+        contentView.backgroundColor = .systemSetting
         
         contentView.addSubview(authorLabel)
         contentView.addSubview(titleLabel)
@@ -58,7 +58,7 @@ class RecommendedBookCell: UICollectionViewCell {
             make.top.equalToSuperview().offset(8)
             make.bottom.equalToSuperview().inset(8)
             make.right.equalToSuperview().inset(8)
-            make.width.equalTo(coverImageView.snp.height) // 정사각형 유지
+            make.width.equalTo(100)
         }
         
         authorLabel.snp.makeConstraints { make in
@@ -68,7 +68,7 @@ class RecommendedBookCell: UICollectionViewCell {
         }
         
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(authorLabel.snp.bottom).offset(4)
+            make.top.equalTo(authorLabel.snp.bottom).offset(6)
             make.left.equalToSuperview().offset(12)
             make.right.lessThanOrEqualTo(coverImageView.snp.left).offset(-8)
         }
@@ -84,11 +84,20 @@ class RecommendedBookCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(book: (title: String, author: String)) {
-        authorLabel.text = "by: \(book.author)"
+    func configure(with book: BookDTO) {
+        authorLabel.text = book.author//"by: \(book.author)"
         titleLabel.text = book.title
-        summaryLabel.text = "ASDjkahsdjkahskjdahsjkdahsjkdahsjkdhaskjdhasjkdhasjkdhasjkdhasjkhdasjkhdajksdhajkshdajks"
-//        coverImageView.backgroundColor =
+        summaryLabel.text = book.description
+        
+        guard let url = URL(string: book.cover) else { return }
+        
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            if let data = try? Data(contentsOf: url),
+               let downloadedImage = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    self?.coverImageView.image = downloadedImage
+                }
+            }
+        }
     }
-    
 }

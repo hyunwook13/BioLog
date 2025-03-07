@@ -30,7 +30,7 @@ class FeaturedBookCell: UICollectionViewCell {
     private let authorLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .darkGray
+        label.textColor = .systemPlaceHolder
         label.textAlignment = .left
         return label
     }()
@@ -45,6 +45,9 @@ class FeaturedBookCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        contentView.layer.cornerRadius = 8
+        contentView.clipsToBounds = true
+        contentView.backgroundColor = .systemSetting
         contentView.addSubview(coverImageView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(authorLabel)
@@ -52,7 +55,7 @@ class FeaturedBookCell: UICollectionViewCell {
         
         coverImageView.snp.makeConstraints { make in
             make.left.top.bottom.equalToSuperview().inset(8)
-            make.width.equalTo(100)
+            make.width.equalTo(138)
         }
         
         titleLabel.snp.makeConstraints { make in
@@ -79,10 +82,19 @@ class FeaturedBookCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(title: String, author: String, progress: Float) {
-        titleLabel.text = title
-        authorLabel.text = author
-        progressView.progress = progress
-        // 커버 이미지는 샘플이므로 임시 배경색 사용
+    func configure(with book: BookDTO) {
+        titleLabel.text = book.title
+        authorLabel.text = book.author
+//        progressView.progress = book.
+        guard let url = URL(string: book.cover) else { return }
+        
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            if let data = try? Data(contentsOf: url),
+               let downloadedImage = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    self?.coverImageView.image = downloadedImage
+                }
+            }
+        }
     }
 }
