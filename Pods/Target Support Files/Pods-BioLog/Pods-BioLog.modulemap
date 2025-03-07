@@ -1,6 +1,0 @@
-framework module Pods_BioLog {
-  umbrella header "Pods-BioLog-umbrella.h"
-
-  export *
-  module * { export * }
-}
