@@ -28,7 +28,7 @@ final class MainCoordinator: Coordinator {
     func start() {
         let actions = MainAction(
             add: presentSearchBookVC,
-            selectedBook: dismissWithBook
+            selectedBook: pushWithBook
         )
         let vc = container.makeMainViewController(actions)
         nav.setViewControllers([vc], animated: false)
@@ -38,15 +38,15 @@ final class MainCoordinator: Coordinator {
         let searchBookDIContainer = container.makeSearchBookDIContainer()
         let childCoor = searchBookDIContainer.makeSearchBookCoordinator(nav: nav)
         
-//        childCoor.didSelectData = {
-//            nav.topViewController
-//        }
-        
         self.childCoordinators.append(childCoor)
         childCoor.start()
     }
     
-    private func dismissWithBook(_ book: BookDTO) {
+    private func pushWithBook(_ book: BookDTO) {
+        let bookInfoDIContainer = container.makeBookInfoDIContainer(book: book)
+        let childCoor = bookInfoDIContainer.makeBookInfoCoordinator(nav: nav)
         
+        self.childCoordinators.append(childCoor)
+        childCoor.start()
     }
 }
