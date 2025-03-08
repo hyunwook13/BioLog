@@ -85,6 +85,11 @@ final class MainViewModel: MainViewModelAble {
             .subscribe { _ in
                 actions.add()
             }.disposed(by: disposeBag)
+
+        selectBookSubject
+            .subscribe { book in
+                actions.selectedBook(book)
+            }.disposed(by: disposeBag)
         
         viewWillAppearSubject
             .flatMap { _ in

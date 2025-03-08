@@ -42,6 +42,8 @@ class MainViewController: UIViewController {
         return btn
     }()
     
+    private var dataSource: RxCollectionViewSectionedReloadDataSource<Section>!
+    
     init(vm: MainViewModelAble) {
         self.viewModel = vm
         super.init(nibName: nil, bundle: nil)
@@ -84,9 +86,24 @@ class MainViewController: UIViewController {
         addButton.rx.tap
             .bind(to: viewModel.add)
             .disposed(by: disposeBag)
+
+        dataSource = createDataSource()
+
+        collectionView.rx.itemSelected
+            .map { indexPath in
+                let item = self.dataSource[indexPath.section].books[indexPath.item]
+                switch item {
+                case .savedBooks(let books):
+                    return books[indexPath.item]
+                case .recommendedBook(let book):
+                    return book
+                }
+            }
+            .bind(to: viewModel.selectBook)
+            .disposed(by: disposeBag)
         
         viewModel.book
-            .drive(collectionView.rx.items(dataSource: createDataSource()))
+            .drive(collectionView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
     }
     
