@@ -17,7 +17,7 @@ final class CoreData: StorageAble {
     static let shared = CoreData()
     
     lazy private var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "HaloGlow")
+        let container = NSPersistentContainer(name: "BioLog")
         container.loadPersistentStores { a, error in
             if let error {
                 fatalError("❌ Failed to load persistent store: \(error)")
