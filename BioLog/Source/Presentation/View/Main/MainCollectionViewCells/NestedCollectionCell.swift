@@ -13,13 +13,15 @@ import RxCocoa
 // MARK: - 첫번째 섹션: 내부 콜렉션 뷰가 포함된 셀
 class NestedCollectionCell: UICollectionViewCell {
     static let reuseIdentifier = "NestedCollectionCell"
+    let screenWidth = UIScreen.main.bounds.width
     
-    let innerItemSelected = PublishSubject<String>()
     let disposeBag = DisposeBag()
     
     private let items: BehaviorSubject<[BookDTO]> = BehaviorSubject(value: [])
-    
-    let screenWidth = UIScreen.main.bounds.width
+
+    var itemSelected: ControlEvent<BookDTO> {
+        return innerCollectionView.rx.modelSelected(BookDTO.self)
+    }
     
     // 내부 콜렉션 뷰 (예: 가로 스크롤)
     private lazy var innerCollectionView: UICollectionView = {
@@ -71,12 +73,6 @@ class NestedCollectionCell: UICollectionViewCell {
     }
     
     private func bind() {
-//        innerCollectionView.rx.itemSelected
-//            .withLatestFrom(items) { idx, items in
-//                return items[idx.item]
-//            }.bind(to: innerItemSelected)
-//            .disposed(by: disposeBag)
-        
         items.bind(to: innerCollectionView.rx.items(cellIdentifier: FeaturedBookCell.reuseIdentifier, cellType: FeaturedBookCell.self)) { _, book, cell in
             cell.configure(with: book)
         }.disposed(by: disposeBag)

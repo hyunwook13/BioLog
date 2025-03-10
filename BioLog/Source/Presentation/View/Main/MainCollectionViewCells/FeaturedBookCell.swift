@@ -13,9 +13,10 @@ class FeaturedBookCell: UICollectionViewCell {
     
     private let coverImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .lightGray
+        imageView.backgroundColor = .systemGray4
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = 8
+        imageView.tintColor = .systemGray
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -82,17 +83,29 @@ class FeaturedBookCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        // 이미지뷰 초기화
+        coverImageView.image = nil
+    }
+    
     func configure(with book: BookDTO) {
-        titleLabel.text = book.title
-        authorLabel.text = book.author
-//        progressView.progress = book.
-        guard let url = URL(string: book.cover) else { return }
-        
-        DispatchQueue.global(qos: .background).async { [weak self] in
-            if let data = try? Data(contentsOf: url),
-               let downloadedImage = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    self?.coverImageView.image = downloadedImage
+        if book.isbn == BookDTO.empty.isbn {
+            titleLabel.text = "추가하신 도서가 없습니다"
+            authorLabel.text = "새로운 도서를 추가해보세요!"
+            coverImageView.image = UIImage(systemName: "book.closed")
+            progressView.isHidden = true
+        } else {
+            titleLabel.text = book.title
+            authorLabel.text = book.author
+            guard let url = URL(string: book.cover) else { return }
+            
+            DispatchQueue.global(qos: .background).async { [weak self] in
+                if let data = try? Data(contentsOf: url),
+                   let downloadedImage = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self?.coverImageView.image = downloadedImage
+                    }
                 }
             }
         }

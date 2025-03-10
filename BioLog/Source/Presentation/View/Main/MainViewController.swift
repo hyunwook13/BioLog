@@ -35,7 +35,6 @@ class MainViewController: UIViewController {
         return cv
     }()
     
-    
     let addButton: UIButton = {
         let btn = UIButton()
         btn.setImage(UIImage(systemName: "plus"), for: .normal)
@@ -86,17 +85,19 @@ class MainViewController: UIViewController {
         addButton.rx.tap
             .bind(to: viewModel.add)
             .disposed(by: disposeBag)
-
+        
         dataSource = createDataSource()
-
+        
         collectionView.rx.itemSelected
-            .map { indexPath in
-                let item = self.dataSource[indexPath.section].books[indexPath.item]
+            .map { [weak self] indexPath -> BookDTO in
+                guard let self = self else { fatalError() }
+                let item = self.dataSource[indexPath]
                 switch item {
-                case .savedBooks(let books):
-                    return books[indexPath.item]
                 case .recommendedBook(let book):
                     return book
+                case .savedBooks(_):
+                    print("오류 발생")
+                    return BookDTO.empty
                 }
             }
             .bind(to: viewModel.selectBook)
@@ -109,15 +110,25 @@ class MainViewController: UIViewController {
     
     private func createDataSource() -> RxCollectionViewSectionedReloadDataSource<Section> {
         return RxCollectionViewSectionedReloadDataSource<Section>(
-            configureCell: { dataSource, collectionView, indexPath, item in
+            configureCell: { [weak self] dataSource, collectionView, indexPath, item in
+                guard let self = self else { return UICollectionViewCell() }
                 switch item {
                 case .savedBooks(let books):
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NestedCollectionCell.reuseIdentifier, for: indexPath) as! NestedCollectionCell
-                    cell.configure(with: books)
+                    if books.isEmpty {
+                        cell.configure(with: [BookDTO.empty])
+                    } else {
+                        cell.configure(with: books)
+                    }
+                    cell.itemSelected
+                        .filter { $0.isbn != BookDTO.empty.isbn }
+                        .bind(to: self.viewModel.selectBook)
+                        .disposed(by: cell.disposeBag)
                     return cell
                 case .recommendedBook(let book):
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendedBookCell.reuseIdentifier, for: indexPath) as! RecommendedBookCell
                     cell.configure(with: book)
+                    
                     return cell
                 }
             },
@@ -169,36 +180,5 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
         } else {
             return CGSize(width: collectionView.frame.width, height: 100)
         }
-    }
-}
-
-class SectionHeaderView: UICollectionReusableView {
-    static let identifier = "SectionHeaderView"
-    
-    private let titleLabel = UILabel()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupViews()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupViews() {
-        addSubview(titleLabel)
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
-        ])
-    }
-    
-    func configure(with title: String) {
-        titleLabel.text = title
     }
 }

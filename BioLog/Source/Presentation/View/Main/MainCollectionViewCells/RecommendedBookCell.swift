@@ -84,6 +84,11 @@ class RecommendedBookCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        coverImageView.image = nil
+    }
+    
     func configure(with book: BookDTO) {
         authorLabel.text = book.author//"by: \(book.author)"
         titleLabel.text = book.title
