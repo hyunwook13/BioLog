@@ -33,8 +33,8 @@ class RecommendedBookCell: UICollectionViewCell {
         return label
     }()
     
-    private let coverImageView: UIImageView = {
-        let imageView = UIImageView()
+    private let coverImageView: AsyncFetchImageView = {
+        let imageView = AsyncFetchImageView(frame: .zero)
         imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
@@ -93,16 +93,6 @@ class RecommendedBookCell: UICollectionViewCell {
         authorLabel.text = book.author//"by: \(book.author)"
         titleLabel.text = book.title
         summaryLabel.text = book.description
-        
-        guard let url = URL(string: book.cover) else { return }
-        
-        DispatchQueue.global(qos: .background).async { [weak self] in
-            if let data = try? Data(contentsOf: url),
-               let downloadedImage = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    self?.coverImageView.image = downloadedImage
-                }
-            }
-        }
+        coverImageView.fetchImage(with: book.cover)
     }
 }

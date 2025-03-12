@@ -1,6 +1,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/xcode,swiftpm,swiftpackagemanager,cocoapods,swift,fastlane,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=xcode,swiftpm,swiftpackagemanager,cocoapods,swift,fastlane,macos
 
+### Cursor With App ### 
+.vscode/
+buildServer.json
+
 ### CocoaPods ###
 ## CocoaPods GitIgnore Template
 

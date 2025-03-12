@@ -11,8 +11,8 @@ import SnapKit
 class FeaturedBookCell: UICollectionViewCell {
     static let reuseIdentifier = "FeaturedBookCell"
     
-    private let coverImageView: UIImageView = {
-        let imageView = UIImageView()
+    private let coverImageView: AsyncFetchImageView = {
+        let imageView = AsyncFetchImageView(frame: .zero)
         imageView.backgroundColor = .systemGray4
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = 8
@@ -93,21 +93,11 @@ class FeaturedBookCell: UICollectionViewCell {
         if book.isbn == BookDTO.empty.isbn {
             titleLabel.text = "추가하신 도서가 없습니다"
             authorLabel.text = "새로운 도서를 추가해보세요!"
-            coverImageView.image = UIImage(systemName: "book.closed")
             progressView.isHidden = true
         } else {
             titleLabel.text = book.title
             authorLabel.text = book.author
-            guard let url = URL(string: book.cover) else { return }
-            
-            DispatchQueue.global(qos: .background).async { [weak self] in
-                if let data = try? Data(contentsOf: url),
-                   let downloadedImage = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        self?.coverImageView.image = downloadedImage
-                    }
-                }
-            }
+            coverImageView.fetchImage(with: book.cover)
         }
     }
 }

@@ -38,6 +38,7 @@ class MainViewController: UIViewController {
     let addButton: UIButton = {
         let btn = UIButton()
         btn.setImage(UIImage(systemName: "plus"), for: .normal)
+        btn.tintColor = .label
         return btn
     }()
     
