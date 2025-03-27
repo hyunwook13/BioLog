@@ -9,19 +9,25 @@ import UIKit
 
 final class SearchBookDIContainer {
     
-    private let usecase: BookUseCaseAble
+    private let bookUseCase: BookUseCase
+    private let categoryUseCase: CategoryUseCase
     
-    init(bookUseCase: BookUseCaseAble) {
-        self.usecase = bookUseCase
+    init(bookUseCase: BookUseCase, categoryUseCase: CategoryUseCase) {
+        self.bookUseCase = bookUseCase
+        self.categoryUseCase = categoryUseCase
     }
     
-    func makeSearchBookViewController(_ actions: SearchBookAction) -> SearchBookViewController {
+    func makeSearchBookViewController(_ actions: SearchBookActionAble) -> SearchBookViewController {
         let vm = makeSearchBookViewModel(actions)
         return SearchBookViewController(vm: vm)
     }
     
-    func makeSearchBookViewModel(_ actions: SearchBookAction) -> SearchBookViewModel {
-        return SearchBookViewModel(usecase: usecase, action: actions)
+    func makeSearchBookViewModel(_ actions: SearchBookActionAble) -> SearchBookViewModel {
+        return SearchBookViewModel(
+            categoryUseCase: categoryUseCase,
+            bookUseCase: bookUseCase,
+            action: actions
+        )
     }
     
     func makeSearchBookCoordinator(nav: UINavigationController) -> SearchBookCoordinator {

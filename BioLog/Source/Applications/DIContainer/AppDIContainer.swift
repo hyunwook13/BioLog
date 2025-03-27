@@ -9,17 +9,35 @@ import Foundation
 
 final class AppDIContainer {
     
-    let bookUseCase: BookUseCaseAble
+    let bookUseCase: BookUseCaseImpl
+    let categoryUseCase: CategoryUseCase
+    let storage: StorageAble
     
     init() {
-        self.bookUseCase = BookUseCase(repo: BookRepositoryImpl(client: ClientImpl()))
+        let stack = BioLogCoreDataStack.shared
+        
+        let storage = CoreData(
+            mainContext: stack.mainContext,
+            container: stack.persistentContainer
+        )
+        
+        let bookRepo = BookRepositoryImpl(
+            client: ClientImpl(),
+            storage: storage
+        )
+        
+        let categoryRepo = CategoryRepositoryImpl(storage)
+        
+        self.storage = storage
+        self.bookUseCase = BookUseCaseImpl(repo: bookRepo)
+        self.categoryUseCase = CategoryUseCaseImpl(categoryRepo)
     }
     
     func makeMainDiContainer() -> MainDiContainer {
-        return MainDiContainer(bookUseCase: bookUseCase)
+        return MainDiContainer(bookUseCase: bookUseCase, categoryUseCase: categoryUseCase, storage: storage)
     }
     
     func makeBookshelfDIContainer() -> BookshelfDIContainer {
-        return BookshelfDIContainer()
+        return BookshelfDIContainer(bookUseCase)
     }
 }
