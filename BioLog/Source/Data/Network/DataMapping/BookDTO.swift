@@ -6,13 +6,17 @@
 //
 
 import Foundation
+import CoreData
 
 struct BookResponse: Codable {
     let item: [BookDTO]
 }
 
 // MARK: - 개별 책(Item) 구조체
-struct BookDTO: Codable {
+struct BookDTO: Codable, Equatable {
+    static func == (lhs: BookDTO, rhs: BookDTO) -> Bool {
+        return lhs.isbn == rhs.isbn
+    }
     
     let title: String
 //    let link: String? // 알라딘 책 링크
@@ -25,12 +29,37 @@ struct BookDTO: Codable {
 //    let priceStandard: Int
     let cover: String
     let categoryName: String
-//    let publisher: String
+    let publisher: String
     let customerReviewRank: Int16
+    
+    var createdAt: Date = Date()
+    var isBookmarked: Bool = false
+    var category: CategoryDTO = .empty
+    var characters: [CharacterDTO] = []
+    
+    var originalObject: Book?
     
     enum CodingKeys: String, CodingKey {
         case isbn = "isbn13"
-        case title, /*link*/ author, pubDate, description, /*priceSales*/ /*priceStandard*/ cover, categoryName, /*publisher*/ customerReviewRank
+        case title, /*link*/ author, pubDate, description, /*priceSales*/ /*priceStandard*/ cover, categoryName, publisher, customerReviewRank
+    }
+}
+
+// 2. BookDTO가 CoreDataConvertible을 준수하도록 확장
+extension BookDTO: CoreDataConvertible {
+    func toCoreDataObject(in context: NSManagedObjectContext) -> Book {
+        let desc = NSEntityDescription.entity(forEntityName: "Book", in: context)!
+        let book = Book(entity: desc, insertInto: context)
+        book.book_description = self.description
+        book.author = self.author
+        book.title = self.title
+        book.id = UUID().uuidString
+        book.isbn = self.isbn
+        book.cover = self.cover
+        book.pubDate = self.pubDate
+        book.categoryName = self.categoryName
+        book.publisher = self.publisher
+        return book
     }
 }
 
@@ -46,8 +75,10 @@ extension BookDTO {
 //            priceStandard: 1,
             cover: "",
             categoryName: "",
+            publisher: "",
 //            publisher: "",
-            customerReviewRank:1
+            customerReviewRank:1,
+            category: .empty
         )
     }
 }
@@ -55,7 +86,9 @@ extension BookDTO {
 
 extension Book {
     func toDTO() -> BookDTO {
-        BookDTO(
+        let characters = self.characters?.allObjects as? [BookCharacter]
+        
+        return BookDTO(
             title: self.title!,
             author: self.author!,
             pubDate: self.pubDate!,
@@ -63,7 +96,13 @@ extension Book {
             isbn: self.isbn!,
             cover: self.cover!,
             categoryName: self.categoryName!,
-            customerReviewRank: self.customerReviewRank
+            publisher: self.publisher!,
+            customerReviewRank: self.customerReviewRank,
+            createdAt: self.createdAt ?? Date(),
+            isBookmarked: self.isBookmarked,
+            category: self.category?.toDTO() ?? .empty,
+            characters: characters?.compactMap { $0.toDTO() } ?? [],
+            originalObject: self
         )
     }
 }
