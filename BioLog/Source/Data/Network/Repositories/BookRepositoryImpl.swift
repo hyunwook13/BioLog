@@ -9,12 +9,14 @@ import Foundation
 
 import RxSwift
 import RxCocoa
+import RxRelay
 
 final class BookRepositoryImpl: BookRepository {
-    private let client: Client
-    private let storage: CoreData
     
-    init(client: Client, storage: CoreData = CoreData.shared) {
+    private let client: Client
+    private let storage: StorageAble
+    
+    init(client: Client, storage: StorageAble) {
         self.client = client
         self.storage = storage
     }
@@ -32,7 +34,7 @@ final class BookRepositoryImpl: BookRepository {
                     // 실제 데이터를 반환
                     single(.success(books.item))
                 } catch {
-                    single(.failure(BookError.searchFailed(error)))
+                    single(.failure(error))
                 }
             }
             
@@ -44,17 +46,8 @@ final class BookRepositoryImpl: BookRepository {
     }
     
     func save(with book: BookDTO) -> Observable<BookDTO> {
-        let cdbook = storage.create(Book.self) { object in
-            object.book_description = book.description
-            object.author = book.author
-            object.title = book.title
-            object.id = UUID().uuidString
-            object.isbn = book.isbn
-            object.cover = book.cover
-            object.pubDate = book.pubDate
-        }
-        
-        return cdbook.map { $0.toDTO() }
+        storage.create(book)
+            .map { $0.toDTO() }
     }
     
     func fetchNewBooks() -> Single<[BookDTO]> {
@@ -70,7 +63,7 @@ final class BookRepositoryImpl: BookRepository {
                     // 실제 데이터를 반환
                     single(.success(books.item))
                 } catch {
-                    single(.failure(BookError.searchFailed(error)))
+                    single(.failure(error))
                 }
             }
             
@@ -78,13 +71,38 @@ final class BookRepositoryImpl: BookRepository {
             return Disposables.create {
                 task.cancel()
             }
-            
         }
     }
     
     func fetchReadingBooks() -> Single<[BookDTO]> {
-        storage.fetch(Book.self)
+        storage.fetch(Book.self, predicate: nil, sortDescriptors: nil)
             .map { $0.map { $0.toDTO() } }
             .asSingle()
+    }
+    
+    func delete(with book: BookDTO) -> Completable {
+        return storage.fetch(Book.self, predicate: NSPredicate(format: "isbn == %@", book.isbn), sortDescriptors: nil)
+            .compactMap { $0.first }
+//            .withUnretained(self)
+            .flatMap { [weak self] fetchedBook -> Completable in
+                guard let self = self else {
+                    return Completable.error(NSError(domain: "BookRepository", code: -1, userInfo: nil))
+                }
+                
+                return storage.delete(with: fetchedBook)
+            }.asCompletable()
+        
+    }
+    
+    private func makeCategories(with data: String) -> [CategoryDTO] {
+        let categories = data.split(separator: " ")
+        
+        var result = [CategoryDTO]()
+        
+        for category in categories {
+            result.append(CategoryDTO(name: String(category)))
+        }
+        
+        return result
     }
 }
