@@ -10,13 +10,10 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-enum BookError: Error {
-    case searchFailed(Error)
-}
-
 protocol BookRepository {
     func findBooks(byTitle title: String) -> Single<[BookDTO]>
     func save(with book: BookDTO) -> Observable<BookDTO>
     func fetchNewBooks() -> Single<[BookDTO]>
     func fetchReadingBooks() -> Single<[BookDTO]>
+    func delete(with book: BookDTO) -> Completable
 }
