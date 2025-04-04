@@ -20,10 +20,29 @@ final class BookShelfCoordinator: Coordinator {
     }
     
     func start() {
-        let vc = container.makeBookshelfViewController()
+        let actions = BookShelfAction(
+            popHandler: pop,
+            pushWithBookHandler: pushWithBook
+        )
+        
+        let vc = container.makeBookshelfViewController(actions: actions)
         
         nav.setViewControllers([vc], animated: false)
     }
     
+    private func pop() {
+        parentCoordinator?.removeChild(self)
+        nav.popViewController(animated: true)
+    }
+    
+    private func pushWithBook(book: BookDTO) {
+        let completeBook = CompleteBook(detail: book, category: book.category, characters: [])
+        let bookInfoDIContainer = container.makePreviewDIContainer(book: completeBook)
+        let childCoor = bookInfoDIContainer.makePreviewCoordinator(nav: nav)
+        
+        self.childCoordinators.append(childCoor)
+        childCoor.parentCoordinator = self
+        childCoor.start()
+    }
     
 }

@@ -51,7 +51,6 @@ final class AppCoordinator: Coordinator {
         
         // Chart 탭
         let bookShelfNav = UINavigationController()
-        bookShelfNav.setNavigationBarHidden(true, animated: false)
         let bookShelfCoordinator = bookShelfDIContainer.makeBookShelfCoordinator(nav: bookShelfNav)
         
         return (
@@ -61,7 +60,7 @@ final class AppCoordinator: Coordinator {
     }
     
     private func settingTabs() {
-        tabbar.viewControllers?[0].tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "house"), tag: 0)
-        tabbar.viewControllers?[1].tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "book.closed"), tag: 1)
+        tabbar.viewControllers?[0].tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house")?.withTintColor(.label, renderingMode: .alwaysOriginal))
+        tabbar.viewControllers?[1].tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "book.closed"), selectedImage: UIImage(systemName: "book.closed")?.withTintColor(.label, renderingMode: .alwaysOriginal))
     }
 }

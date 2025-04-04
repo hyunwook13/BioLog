@@ -7,12 +7,6 @@
 
 import UIKit
 
-
-struct MainAction {
-    let add: () -> Void
-    let selectedBook: (BookDTO) -> Void
-}
-
 final class MainCoordinator: Coordinator {
     weak var parentCoordinator: Coordinator?
     
@@ -27,8 +21,10 @@ final class MainCoordinator: Coordinator {
     
     func start() {
         let actions = MainAction(
-            add: presentSearchBookVC,
-            selectedBook: pushWithBook
+            addHandler: presentSearchBookVC,
+            selectedReadingBookHandler: pushWithReadingBook,
+            selectedNewBookHandler: pushWithNewBook,
+            chartHandler: chart
         )
         let vc = container.makeMainViewController(actions)
         nav.setViewControllers([vc], animated: false)
@@ -39,14 +35,39 @@ final class MainCoordinator: Coordinator {
         let childCoor = searchBookDIContainer.makeSearchBookCoordinator(nav: nav)
         
         self.childCoordinators.append(childCoor)
+        childCoor.parentCoordinator = self
         childCoor.start()
     }
     
-    private func pushWithBook(_ book: BookDTO) {
+    private func pushWithReadingBook(_ book: CompleteBook) {
         let bookInfoDIContainer = container.makeBookInfoDIContainer(book: book)
         let childCoor = bookInfoDIContainer.makeBookInfoCoordinator(nav: nav)
         
         self.childCoordinators.append(childCoor)
+        childCoor.parentCoordinator = self
         childCoor.start()
+    }
+    
+    private func pushWithNewBook(_ book: CompleteBook) {
+        let bookInfoDIContainer = container.makePreviewDIContainer(book: book)
+        let childCoor = bookInfoDIContainer.makePreviewCoordinator(nav: nav)
+        
+        self.childCoordinators.append(childCoor)
+        childCoor.parentCoordinator = self
+        childCoor.start()
+    }
+    
+    
+    private func chart() {
+        if #available(iOS 16.0, *) {
+            let bookInfoDIContainer = container.makeChartDIContainer()
+            let childCoor = bookInfoDIContainer.makeChartCoordinator(nav: nav)
+            
+            self.childCoordinators.append(childCoor)
+            childCoor.parentCoordinator = self
+            childCoor.start()
+        } else {
+            // 이전 버전에서는 지원하지 않는 기능
+        }
     }
 }

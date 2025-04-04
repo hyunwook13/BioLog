@@ -7,8 +7,23 @@
 
 import UIKit
 
-struct BookInfoAction {
-    let dismiss: () -> Void
+protocol BookInfoAction {
+    func pop()
+    func pushCharacter(_ character: CharacterDTO)
+}
+
+struct BookInfoActionAble: BookInfoAction {
+    
+    let popHandler: () -> Void
+    let pushWithCharacter: (CharacterDTO) -> Void
+    
+    func pop() {
+        popHandler()
+    }
+    
+    func pushCharacter(_ character: CharacterDTO) {
+        pushWithCharacter(character)
+    }
 }
 
 final class BookInfoCoordinator: Coordinator {
@@ -22,16 +37,46 @@ final class BookInfoCoordinator: Coordinator {
         self.nav = nav
     }
     
+    deinit {
+        print("BookInfoCoordinator deinit")
+    }
+    
     func start() {
-        let actions = BookInfoAction(
-            dismiss: dismiss
+        let actions = BookInfoActionAble(
+            popHandler: pop,
+            pushWithCharacter: pushCharacter(_:)
         )
         
         let vc = container.makeBookInfoViewController(actions)
+        vc.hidesBottomBarWhenPushed = true
+        nav.navigationBar.tintColor = .label
         nav.pushViewController(vc, animated: true)
+        
+        // 시스템 back 버튼의 동작 커스텀
+        nav.interactivePopGestureRecognizer?.delegate = nil
+        vc.navigationItem.leftBarButtonItem = UIBarButtonItem(
+            title: "뒤로",
+            style: .plain,
+            target: self,
+            action: #selector(customDismiss)
+        )
     }
     
-    private func dismiss() {
+    @objc private func customDismiss() {
+        parentCoordinator?.removeChild(self)
+        pop()
+    }
+    
+    private func pushCharacter(_ character: CharacterDTO) {
+        let container = container.makeEditCharcterDIContainer(character: character)
+        let childCoor = container.makeEditCharacterCoordinator(nav: nav)
+        
+        self.childCoordinators.append(childCoor)
+        childCoor.parentCoordinator = self
+        childCoor.start()
+    }
+    
+    private func pop() {
         nav.popViewController(animated: true)
     }
 }
