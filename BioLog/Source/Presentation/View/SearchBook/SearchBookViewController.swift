@@ -25,7 +25,15 @@ class SearchBookViewController: UIViewController {
         return sb
     }()
     
-    let cancelBtn = UIBarButtonItem(title: "닫기", image: nil, target: nil, action: nil)
+    private lazy var cancelBtn: UIBarButtonItem = {
+        if #available(iOS 16.0, *) {
+            let cancelBtn = UIBarButtonItem(title: "닫기", image: nil, target: nil, action: nil)
+            return cancelBtn
+        } else {
+            let cancelBtn = UIBarButtonItem(title: "닫기", style: .plain, target: nil, action: nil)
+            return cancelBtn
+        }
+    }()
     
     lazy var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .plain)
@@ -37,6 +45,10 @@ class SearchBookViewController: UIViewController {
     init(vm: SearchBookViewModelAble) {
         self.viewModel = vm
         super.init(nibName: nil, bundle: nil)
+    }
+    
+    deinit {
+        print("deinit SearchBookViewController")
     }
     
     required init?(coder: NSCoder) {

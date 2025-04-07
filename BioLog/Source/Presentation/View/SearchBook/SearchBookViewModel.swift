@@ -31,30 +31,37 @@ final class SearchBookViewModel: SearchBookViewModelAble {
     
     private let booksSubject = PublishSubject<[BookDTO]>()
     
-    init(usecase: BookUseCaseAble, action: SearchBookAction) {
+    init(categoryUseCase: CategoryUseCase, bookUseCase: BookUseCase, action: SearchBookActionAble, scheduler: SchedulerType = MainScheduler.instance) {
         cancelSubject
             .subscribe { _ in
                 action.cancel()
             }.disposed(by: disposeBag)
         
         searchedTitleSubject
-            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+            .debounce(.milliseconds(300), scheduler: scheduler)
             .distinctUntilChanged()
             .flatMapLatest { text in
-                usecase.search(title: text)
+                return bookUseCase.searchBooksFromNetwork(with: text)
+                    .asObservable()
+                    .retry(2)
+                    .catchAndReturn([])
             }
-            .subscribe(onNext: { books in
-                self.booksSubject.onNext(books)
-            }, onError: { error in
-                self.booksSubject.onError(error)
-            })
+            .bind(to: booksSubject)
             .disposed(by: disposeBag)
         
         selectedBookSubject
-            .flatMap {
-                usecase.save(with: $0)
-            }.subscribe {
-                action.selected($0)
+            .flatMap { book in
+                return bookUseCase.save(with: book)
+            }
+            .flatMap { book -> Observable<(BookDTO, CategoryDTO)> in
+                let category = categoryUseCase.saveCategory(book.categoryName, book).asObservable()
+                
+                return Observable.zip(Observable.of(book), category)
+            }
+            .map { book, category in
+                return CompleteBook(detail: book, category: category, characters: [])
+            }.bind { completeBook in
+                action.selected(completeBook)
             }.disposed(by: disposeBag)
     }
     

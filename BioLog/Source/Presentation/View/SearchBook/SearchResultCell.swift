@@ -11,10 +11,8 @@ import SnapKit
 class SearchResultCell: UITableViewCell {
     static let reuseIdentifier = "SearchResultCell"
     
-    // MARK: - Subviews
-    
-    private let coverImageView: UIImageView = {
-        let imageView = UIImageView()
+    private let coverImageView: AsyncFetchImageView = {
+        let imageView = AsyncFetchImageView(frame: .zero)
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 4
@@ -65,10 +63,7 @@ class SearchResultCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Layout with SnapKit
-    
     private func setupConstraints() {
-        
         coverImageView.snp.makeConstraints { make in
             make.left.equalToSuperview().offset(24)
             make.top.equalToSuperview().offset(8)
@@ -95,22 +90,10 @@ class SearchResultCell: UITableViewCell {
         }
     }
     
-    // MARK: - Configure
-    
     func configure(with book: BookDTO) {
         titleLabel.text = book.title
         authorLabel.text = book.author
         ratingLabel.text = "★ \(book.customerReviewRank)"
-        
-        guard let url = URL(string: book.cover) else { return }
-        
-        DispatchQueue.global(qos: .background).async { [weak self] in
-            if let data = try? Data(contentsOf: url),
-               let downloadedImage = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    self?.coverImageView.image = downloadedImage
-                }
-            }
-        }
+        coverImageView.fetchImage(with: book.cover)
     }
 }
