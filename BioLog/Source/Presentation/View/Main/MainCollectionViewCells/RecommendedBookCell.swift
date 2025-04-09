@@ -89,10 +89,10 @@ class RecommendedBookCell: UICollectionViewCell {
         coverImageView.image = nil
     }
     
-    func configure(with book: BookDTO) {
-        authorLabel.text = book.author//"by: \(book.author)"
-        titleLabel.text = book.title
-        summaryLabel.text = book.description
-        coverImageView.fetchImage(with: book.cover)
+    func configure(with book: CompleteBook) {
+        authorLabel.text = book.detail.author
+        titleLabel.text = book.detail.title
+        summaryLabel.text = book.detail.description
+        coverImageView.fetchImage(with: book.detail.cover)
     }
 }

@@ -85,19 +85,18 @@ class FeaturedBookCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        // 이미지뷰 초기화
         coverImageView.image = nil
     }
     
-    func configure(with book: BookDTO) {
-        if book.isbn == BookDTO.empty.isbn {
+    func configure(with book: CompleteBook) {
+        if book.detail.isbn == BookDTO.empty.isbn {
             titleLabel.text = "추가하신 도서가 없습니다"
             authorLabel.text = "새로운 도서를 추가해보세요!"
             progressView.isHidden = true
         } else {
-            titleLabel.text = book.title
-            authorLabel.text = book.author
-            coverImageView.fetchImage(with: book.cover)
+            titleLabel.text = book.detail.title
+            authorLabel.text = book.detail.author
+            coverImageView.fetchImage(with: book.detail.cover)
         }
     }
 }

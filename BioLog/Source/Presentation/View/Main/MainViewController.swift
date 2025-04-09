@@ -35,9 +35,16 @@ class MainViewController: UIViewController {
         return cv
     }()
     
-    let addButton: UIButton = {
+    private let addButton: UIButton = {
         let btn = UIButton()
         btn.setImage(UIImage(systemName: "plus"), for: .normal)
+        btn.tintColor = .label
+        return btn
+    }()
+    
+    private let chartButton: UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage(systemName: "chart.bar"), for: .normal) // 차트 아이콘
         btn.tintColor = .label
         return btn
     }()
@@ -46,6 +53,7 @@ class MainViewController: UIViewController {
     
     init(vm: MainViewModelAble) {
         self.viewModel = vm
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -66,7 +74,13 @@ class MainViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
         self.navigationItem.title = "어서오세요!"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: addButton)
+        
+        var barButtonItems: [UIBarButtonItem] = [UIBarButtonItem(customView: addButton)]
+        if #available(iOS 16.0, *) {
+            barButtonItems.append(UIBarButtonItem(customView: chartButton))
+        }
+        
+        navigationItem.rightBarButtonItems = barButtonItems
     }
     
     private func settingLayout() {
@@ -87,21 +101,27 @@ class MainViewController: UIViewController {
             .bind(to: viewModel.add)
             .disposed(by: disposeBag)
         
+        chartButton.rx.tap
+            .map {
+                print(Date.timeIntervalSinceReferenceDate)
+            }
+            .bind(to: viewModel.chart)
+            .disposed(by: disposeBag)
+        
         dataSource = createDataSource()
         
         collectionView.rx.itemSelected
-            .map { [weak self] indexPath -> BookDTO in
+            .map { [weak self] indexPath -> CompleteBook in
                 guard let self = self else { fatalError() }
                 let item = self.dataSource[indexPath]
                 switch item {
                 case .recommendedBook(let book):
                     return book
                 case .savedBooks(_):
-                    print("오류 발생")
-                    return BookDTO.empty
+                    return CompleteBook.empty
                 }
             }
-            .bind(to: viewModel.selectBook)
+            .bind(to: viewModel.selectNewBook)
             .disposed(by: disposeBag)
         
         viewModel.book
@@ -117,19 +137,18 @@ class MainViewController: UIViewController {
                 case .savedBooks(let books):
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NestedCollectionCell.reuseIdentifier, for: indexPath) as! NestedCollectionCell
                     if books.isEmpty {
-                        cell.configure(with: [BookDTO.empty])
+                        cell.configure(with: [CompleteBook.empty])
                     } else {
                         cell.configure(with: books)
                     }
                     cell.itemSelected
-                        .filter { $0.isbn != BookDTO.empty.isbn }
-                        .bind(to: self.viewModel.selectBook)
+                        .filter { $0.detail.isbn != BookDTO.empty.isbn }
+                        .bind(to: self.viewModel.selectReadingBook)
                         .disposed(by: cell.disposeBag)
                     return cell
                 case .recommendedBook(let book):
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendedBookCell.reuseIdentifier, for: indexPath) as! RecommendedBookCell
                     cell.configure(with: book)
-                    
                     return cell
                 }
             },

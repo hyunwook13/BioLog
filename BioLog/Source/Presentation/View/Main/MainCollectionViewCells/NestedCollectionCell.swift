@@ -17,10 +17,10 @@ class NestedCollectionCell: UICollectionViewCell {
     
     let disposeBag = DisposeBag()
     
-    private let items: BehaviorSubject<[BookDTO]> = BehaviorSubject(value: [])
+    private let items: BehaviorSubject<[CompleteBook]> = BehaviorSubject(value: [])
 
-    var itemSelected: ControlEvent<BookDTO> {
-        return innerCollectionView.rx.modelSelected(BookDTO.self)
+    var itemSelected: ControlEvent<CompleteBook> {
+        return innerCollectionView.rx.modelSelected(CompleteBook.self)
     }
     
     // 내부 콜렉션 뷰 (예: 가로 스크롤)
@@ -49,7 +49,6 @@ class NestedCollectionCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         setting()
         bind()
     }
@@ -59,7 +58,7 @@ class NestedCollectionCell: UICollectionViewCell {
     }
     
     // 데이터 전달 후 내부 콜렉션 뷰 리로드
-    func configure(with items: [BookDTO]) {
+    func configure(with items: [CompleteBook]) {
         self.items.onNext(items)
         innerCollectionView.reloadData()
     }

@@ -18,8 +18,8 @@ struct Section {
 }
 
 enum SectionItem {
-    case savedBooks([BookDTO])    // 배열 전체를 담는 케이스
-    case recommendedBook(BookDTO) // 개별 책 한 권씩 처리
+    case savedBooks([CompleteBook])    // 배열 전체를 담는 케이스
+    case recommendedBook(CompleteBook) // 개별 책 한 권씩 처리
 }
 
 extension Section: SectionModelType {
@@ -37,64 +37,92 @@ extension Section: SectionModelType {
 
 protocol MainViewModelAble {
     var add: AnyObserver<Void> { get }
+    var chart: AnyObserver<Void> { get }
     var viewWillAppear: AnyObserver<Void> { get }
-    var selectBook: AnyObserver<BookDTO> { get }
+    var selectReadingBook: AnyObserver<CompleteBook> { get }
+    var selectNewBook: AnyObserver<CompleteBook> { get }
     
-    var newBooks: Driver<[BookDTO]> { get }
-    var readingBooks: Driver<[BookDTO]> { get }
+    var newBooks: Driver<[CompleteBook]> { get }
+    var readingBooks: Driver<[CompleteBook]> { get }
     var book: Driver<[Section]> { get }
-    
-    func refreshData()
 }
 
 final class MainViewModel: MainViewModelAble {
-    
+    private let booksChangedSubject = PublishSubject<Void>()
+    private let usecase: BookUseCase
     private let disposeBag = DisposeBag()
     
     private let addSubject = PublishSubject<Void>()
+    private let chartSubject = PublishSubject<Void>()
     private let viewWillAppearSubject = PublishSubject<Void>()
-    private let selectBookSubject = PublishSubject<BookDTO>()
+    private let selectReadingBookSubject = PublishSubject<CompleteBook>()
+    private let selectNewBookSubject = PublishSubject<CompleteBook>()
     
-    private let newBooksSubject = PublishSubject<[BookDTO]>()
-    private let readingBooksSubject = PublishSubject<[BookDTO]>()
+    private let newBooksSubject = PublishSubject<[CompleteBook]>()
+    private let readingBooksSubject = PublishSubject<[CompleteBook]>()
     
-    private let booksChangedSubject = PublishSubject<Void>()
-    private let usecase: BookUseCaseAble
-    
-    init(usecase: BookUseCaseAble, actions: MainAction) {
+    init(usecase: BookUseCase, actions: MainActionAble) {
         self.usecase = usecase
         registerObserver()
         
         addSubject
+            .observe(on: MainScheduler.instance)
             .subscribe { _ in
                 actions.add()
             }.disposed(by: disposeBag)
-
-        selectBookSubject
+        
+        selectReadingBookSubject
             .throttle(.seconds(1), latest: false, scheduler: MainScheduler.instance)
             .subscribe { book in
-                actions.selectedBook(book)
+                actions.selectedReadingBook(with: book)
+            }.disposed(by: disposeBag)
+        
+        selectNewBookSubject
+            .throttle(.seconds(1), latest: false, scheduler: MainScheduler.instance)
+            .subscribe { book in
+                actions.selectedNewBook(with: book)
+            }.disposed(by: disposeBag)
+        
+        chartSubject
+            .bind {
+                actions.chart()
             }.disposed(by: disposeBag)
         
         Observable.merge(viewWillAppearSubject, booksChangedSubject)
-            .flatMap { [weak self] _ -> Single<[BookDTO]> in
+//            .throttle(.seconds(1), latest: false, scheduler: MainScheduler.instance)
+            .flatMapLatest { [weak self] _ -> Observable<[BookDTO]> in
                 guard let self = self else { return .just([]) }
                 return self.usecase.fetchReadingBooks()
+                    .asObservable()
+                    .retry(2)
+                    .catch { _ in .just([]) }
             }
-            .subscribe { [weak self] books in
-                guard let self = self else { return }
-                self.readingBooksSubject.onNext(books)
-            }.disposed(by: disposeBag)
+            .map { books in
+                return books.map {
+                    return CompleteBook(
+                        detail: $0,
+                        category: $0.category,
+                        characters: $0.characters
+                    )
+                }
+            }
+            .subscribe(readingBooksSubject)
+            .disposed(by: disposeBag)
         
         Observable.merge(viewWillAppearSubject, booksChangedSubject)
+            .throttle(.seconds(1), latest: false, scheduler: MainScheduler.instance)
             .flatMap { [weak self] _ -> Single<[BookDTO]> in
                 guard let self = self else { return .just([]) }
                 return self.usecase.fetchNewBooks()
+                    .catch { _ in .just([]) }
             }
-            .subscribe { [weak self] books in
-                guard let self = self else { return }
-                self.newBooksSubject.onNext(books)
-            }.disposed(by: disposeBag)
+            .map { books in
+                return books.map {
+                    return CompleteBook(detail: $0, category: $0.category, characters: $0.characters)
+                }
+            }
+            .subscribe(newBooksSubject)
+            .disposed(by: disposeBag)
     }
     
     deinit {
@@ -105,45 +133,47 @@ final class MainViewModel: MainViewModelAble {
         addSubject.asObserver()
     }
     
+    var chart: AnyObserver<Void> {
+        chartSubject.asObserver()
+    }
+    
     var viewWillAppear: AnyObserver<Void> {
         viewWillAppearSubject.asObserver()
     }
     
-    var selectBook: AnyObserver<BookDTO> {
-        selectBookSubject.asObserver()
+    var selectReadingBook: AnyObserver<CompleteBook> {
+        selectReadingBookSubject.asObserver()
     }
     
-    var newBooks: Driver<[BookDTO]> {
+    var selectNewBook: AnyObserver<CompleteBook> {
+        selectNewBookSubject.asObserver()
+    }
+    
+    var newBooks: Driver<[CompleteBook]> {
         newBooksSubject.asDriver(onErrorJustReturn: [])
     }
     
-    var readingBooks: Driver<[BookDTO]> {
+    var readingBooks: Driver<[CompleteBook]> {
         readingBooksSubject.asDriver(onErrorJustReturn: [])
     }
     
-    var book: RxCocoa.Driver<[Section]> {
+    var book: Driver<[Section]> {
         Observable.combineLatest(readingBooksSubject, newBooksSubject)
             .map { (readingBooks, newBooks) in
-                print(readingBooks)
                 return [
                     Section(title: "저장된 책", books: [.savedBooks(readingBooks)]),
                     Section(title: "따끈따끈 신간 도서", books: newBooks.map { .recommendedBook($0)} )
                 ]
             }.asDriver(onErrorJustReturn: [])
     }
-    
+}
+
+extension MainViewModel {
     private func registerObserver() {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(refreshData),
             name: Notification.Name("RefreshMainViewData"),
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(handleCoreDataChanges),
-            name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
             object: nil
         )
         
@@ -158,20 +188,4 @@ final class MainViewModel: MainViewModelAble {
     @objc func refreshData() {
         booksChangedSubject.onNext(())
     }
-    
-    @objc private func handleCoreDataChanges(notification: Notification) {
-//        guard let userInfo = notification.userInfo else { return }
-//        
-//        let changedEntities = [
-//            NSInsertedObjectsKey,
-//            NSUpdatedObjectsKey,
-//            NSDeletedObjectsKey
-//        ].flatMap { (userInfo[$0] as? Set<NSManagedObject>)?.compactMap { $0 as? Book } ?? [] }
-//        
-//        if !changedEntities.isEmpty {
-//            refreshData()
-//        }
-    }
-    
-
 }
