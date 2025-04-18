@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -97,6 +97,8 @@
 		7C4E34EF2DBA29670006EAFD /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E34912DBA29670006EAFD /* SearchResultCell.swift */; };
 		7C4E34F02DBA29670006EAFD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C4E34182DBA29670006EAFD /* Assets.xcassets */; };
 		7C4E34F22DBA29670006EAFD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C4E341B2DBA29670006EAFD /* LaunchScreen.storyboard */; };
+		7C66118C2DCB962F0045ACA2 /* BookMigrationPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66118B2DCB962F0045ACA2 /* BookMigrationPolicy.swift */; };
+		7C66118F2DCB97CC0045ACA2 /* BioLogModel.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 7C66118E2DCB97CC0045ACA2 /* BioLogModel.xcmappingmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -206,6 +208,9 @@
 		7C4E34972DBA29670006EAFD /* BioLog.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BioLog.xcdatamodel; sourceTree = "<group>"; };
 		7C4E34982DBA29670006EAFD /* BioLog_v2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BioLog_v2.xcdatamodel; sourceTree = "<group>"; };
 		7C4E34992DBA29670006EAFD /* BioLog_v3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BioLog_v3.xcdatamodel; sourceTree = "<group>"; };
+		7C66118B2DCB962F0045ACA2 /* BookMigrationPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMigrationPolicy.swift; sourceTree = "<group>"; };
+		7C66118D2DCB97740045ACA2 /* BioLog_v4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BioLog_v4.xcdatamodel; sourceTree = "<group>"; };
+		7C66118E2DCB97CC0045ACA2 /* BioLogModel.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = BioLogModel.xcmappingmodel; sourceTree = "<group>"; };
 		A45E9B741626B0179DE5ED89 /* Pods_BioLogTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BioLogTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCCDA405256CF394FCA9FF21 /* Pods-BioLog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BioLog.debug.xcconfig"; path = "Target Support Files/Pods-BioLog/Pods-BioLog.debug.xcconfig"; sourceTree = "<group>"; };
 		D2FB9DDB43AD177DD5368B9A /* Pods-BioLogTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BioLogTests.release.xcconfig"; path = "Target Support Files/Pods-BioLogTests/Pods-BioLogTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -213,11 +218,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		7C21A9F82D6CB280006A1489 /* BioLogTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = BioLogTests;
-			sourceTree = "<group>";
-		};
+		7C21A9F82D6CB280006A1489 /* BioLogTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = BioLogTests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -352,10 +353,12 @@
 		7C4E343B2DBA29670006EAFD /* PersistentStorages */ = {
 			isa = PBXGroup;
 			children = (
+				7C66118E2DCB97CC0045ACA2 /* BioLogModel.xcmappingmodel */,
 				7C4E34372DBA29670006EAFD /* BioLog.entitlements */,
 				7C4E34382DBA29670006EAFD /* BioLog.xcdatamodeld */,
 				7C4E34392DBA29670006EAFD /* BioLogCoreDataStack.swift */,
 				7C4E343A2DBA29670006EAFD /* CoreData.swift */,
+				7C66118B2DCB962F0045ACA2 /* BookMigrationPolicy.swift */,
 			);
 			path = PersistentStorages;
 			sourceTree = "<group>";
@@ -722,6 +725,7 @@
 				};
 			};
 			buildConfigurationList = 7C21A9D62D6CB27E006A1489 /* Build configuration list for PBXProject "BioLog" */;
+			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -730,7 +734,6 @@
 			);
 			mainGroup = 7C21A9D22D6CB27E006A1489;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 56;
 			productRefGroup = 7C21A9DC2D6CB27E006A1489 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -859,6 +862,7 @@
 				7C4E349C2DBA29670006EAFD /* BookshelfDIContainer.swift in Sources */,
 				7C4E349D2DBA29670006EAFD /* ChartDIContainer.swift in Sources */,
 				7C4E349E2DBA29670006EAFD /* EditCharacterDIContainer.swift in Sources */,
+				7C66118F2DCB97CC0045ACA2 /* BioLogModel.xcmappingmodel in Sources */,
 				7C4E349F2DBA29670006EAFD /* EditNoteDIContainer.swift in Sources */,
 				7C4E34A02DBA29670006EAFD /* MainDiContainer.swift in Sources */,
 				7C4E34A12DBA29670006EAFD /* PreviewDIContainer.swift in Sources */,
@@ -883,6 +887,7 @@
 				7C4E34B42DBA29670006EAFD /* CharacterRepository.swift in Sources */,
 				7C4E34B52DBA29670006EAFD /* NoteRepository.swift in Sources */,
 				7C4E34B62DBA29670006EAFD /* BookUseCase.swift in Sources */,
+				7C66118C2DCB962F0045ACA2 /* BookMigrationPolicy.swift in Sources */,
 				7C4E34B72DBA29670006EAFD /* CategoryUseCaseImpl.swift in Sources */,
 				7C4E34B82DBA29670006EAFD /* CharacterUseCase.swift in Sources */,
 				7C4E34B92DBA29670006EAFD /* NoteUseCase.swift in Sources */,
@@ -1247,11 +1252,12 @@
 		7C4E34382DBA29670006EAFD /* BioLog.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				7C66118D2DCB97740045ACA2 /* BioLog_v4.xcdatamodel */,
 				7C4E34972DBA29670006EAFD /* BioLog.xcdatamodel */,
 				7C4E34982DBA29670006EAFD /* BioLog_v2.xcdatamodel */,
 				7C4E34992DBA29670006EAFD /* BioLog_v3.xcdatamodel */,
 			);
-			currentVersion = 7C4E34992DBA29670006EAFD /* BioLog_v3.xcdatamodel */;
+			currentVersion = 7C66118D2DCB97740045ACA2 /* BioLog_v4.xcdatamodel */;
 			path = BioLog.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
