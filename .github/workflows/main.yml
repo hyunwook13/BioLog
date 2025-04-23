@@ -42,6 +42,11 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         run: fastlane match appstore --readonly
 
+      - name: Debug: List project directory
+        run: |
+          pwd
+          ls -la
+
       - name: Install CocoaPods and dependencies
         run: |
           gem install bundler
