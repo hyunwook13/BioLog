@@ -1,4 +1,4 @@
-git_url("https://github.com/hyunwook13/BioLog")
+git_url("git@github.com:hyunwook13/BioLog.git")
 git_branch("master")
 
 storage_mode("git")
