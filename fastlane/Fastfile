@@ -1,24 +1,36 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "커스텀 릴리즈"
+  desc "코코아팟 설치 → 테스트 → match → 빌드 및 TestFlight 업로드"
+
   lane :custom_release do
-    # ① 푸시 인증서·설정 준비
+    # 2. 테스트 (실패해도 진행)
+    scan(
+      scheme: "BioLogTests",
+      workspace: "BioLog.xcworkspace",
+      fail_build: false,
+      skip_build: false,
+      clean: true,
+      output_types: "html,junit",
+      output_directory: "fastlane/test_output",
+      build_for_testing: true
+      # destination: "platform=iOS Simulator,name=iPhone 16 Pro,OS=18.1"
+    )
 
-    cocoapods(clean_install: true, try_repo_update_on_error: true )
-    run_tests(scheme: "BioLogTests", fail_build: false)
+    # 3. 인증서 및 프로비저닝 프로파일 설치
+    match(
+      type: "appstore",
+      readonly: true
+    )
 
-    # ② App Store Connect API 키 인증
-    match(type:"appstore")
-    build_app(scheme: "BioLog")
-    pilot( api_key_path: "fastlane/6UA8N7RLF2.json",
-           ipa: "./BioLog.ipa"   )
-  end
+    # 4. 빌드 및 업로드
+    build_app(
+      scheme: "BioLog"
+    )
 
-  desc "빌드→아카이브→내보내기→TestFlight 업로드"
-  lane :release do
-    match(type:"appstore")
-    build_app(scheme: "BioLog")
-    pilot(api_key_path: "fastlane/6UA8N7RLF2.json", ipa: "./BioLog.ipa")
+    pilot(
+      api_key_path: "fastlane/api_key.json",
+      ipa: "./BioLog.ipa"
+    )
   end
 end

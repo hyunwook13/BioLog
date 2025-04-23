@@ -22,7 +22,6 @@ final class PreviewViewModel: PreviewViewModelAble {
 
     let saveSubject = PublishSubject<Void>()
     
-    
     init(book: CompleteBook, usecase: BookUseCase) {
         self.book = book
         

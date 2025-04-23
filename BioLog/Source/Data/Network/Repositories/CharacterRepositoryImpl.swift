@@ -55,7 +55,7 @@ final class CharacterRepositoryImpl: CharacterRepository {
                 character.sex = dto.sex
                 character.age = dto.age
                 character.labor = dto.labor
-                character.note = NSSet(array: dto.notes.map { $0.originalObject! })
+                character.note = NSSet(array: dto.notes.compactMap { $0.originalObject })
                 do {
                     try self.storage.save()
                 }

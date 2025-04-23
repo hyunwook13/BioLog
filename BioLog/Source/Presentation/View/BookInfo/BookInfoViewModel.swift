@@ -11,42 +11,6 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
-struct InfoSection {
-    let title: String
-    var types: [PresentType]
-    
-    // Conform to SectionModelType
-    init(original: InfoSection, items: [PresentType]) {
-        self = original
-        self.types = items
-    }
-    
-    // Add this initializer
-    init(title: String, types: [PresentType]) {
-        self.title = title
-        self.types = types
-    }
-}
-
-enum PresentType: Equatable {
-    case bookInfo(CompleteBook)
-//    case notes(NoteDTO)
-    case characters(CharacterDTO)
-}
-
-enum SectionType {
-    case character
-    case note
-}
-
-extension InfoSection: SectionModelType {
-    typealias Item = PresentType
-    
-    var items: [PresentType] {
-        return types
-    }
-}
-
 protocol BookInfoViewModelAble {
     // Input
     var viewWillAppear: AnyObserver<Void> { get }
@@ -75,6 +39,8 @@ final class BookInfoViewModel: BookInfoViewModelAble {
     private let bookSubject: BehaviorSubject<CompleteBook>
     private let charactersSubject = BehaviorSubject<[CharacterDTO]>(value: []) // Add characters subject
 //    private let notesSubject = BehaviorSubject<[NoteDTO]>(value: [])
+    
+    private let actionSubject = PublishSubject<Void>()
     
     // Modify to include character use case
     init(book: CompleteBook,
@@ -142,18 +108,25 @@ final class BookInfoViewModel: BookInfoViewModelAble {
 //            }.disposed(by: disposeBag)
         
         deleteSubject
-            .flatMap {
-                bookUseCase.delete(with: book.detail)
+            .flatMap { _ -> Observable<Void> in
+                return bookUseCase.delete(with: book.detail)
+                    .andThen(Observable.just(()))
             }
-            .subscribe { observer in
-                switch observer {
-                case .completed:
-                    actions.pop()
-                case .error(let error):
-                    print("삭제 중 오류 발생: \(error)")
-                }
-            }
+            .subscribe(on: MainScheduler.instance)
+            .subscribe(onNext: { _ in
+                self.actionSubject.onNext(())
+            }, onError: { error in
+                print("❌ VM 에러: \(error)")
+            }, onCompleted: {
+                print("🎉 VM에서 완료받음")
+                
+            })
             .disposed(by: disposeBag)
+        
+        actionSubject
+            .bind {
+                actions.pop()
+            }.disposed(by: disposeBag)
     }
     
     deinit {

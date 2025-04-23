@@ -102,9 +102,6 @@ class MainViewController: UIViewController {
             .disposed(by: disposeBag)
         
         chartButton.rx.tap
-            .map {
-                print(Date.timeIntervalSinceReferenceDate)
-            }
             .bind(to: viewModel.chart)
             .disposed(by: disposeBag)
         

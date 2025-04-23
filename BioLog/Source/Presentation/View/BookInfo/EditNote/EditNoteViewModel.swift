@@ -37,6 +37,7 @@ class EditNoteViewModel: EditNoteViewModelAble {
     private let pageSubject = PublishSubject<String>()
     private let saveSubject = PublishSubject<Void>()
     
+    private let actionSubject = PublishSubject<Void>()
     
     
     // 초기화 메서드
@@ -44,18 +45,26 @@ class EditNoteViewModel: EditNoteViewModelAble {
         
         let noteStream = Observable.combineLatest(contextSubject, pageSubject)
         
+        actionSubject
+            .bind {
+                action.pop()
+            }.disposed(by: disposeBag)
+        
         saveSubject
             .throttle(.seconds(1), latest: false, scheduler: scheduler)
             .withLatestFrom(noteStream)
-            .flatMap { context, page -> Completable in
+            .flatMap { context, page -> Observable<Void> in
                 let noteDTO = NoteDTO(context: context, page: page, uuid: note.uuid)
                 return usecase.updateNote(with: noteDTO)
+                    .andThen(Observable.just(()))
             }
+            .asObservable()
             .subscribe({ completed in
                 switch completed {
+                case .next(_) :
+                    self.actionSubject.onNext(())
                 case .completed:
-                    print("여기들어옴")
-                    action.pop()
+                    return
                 case .error(let error):
                     print(error.localizedDescription)
                 }

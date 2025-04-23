@@ -42,8 +42,6 @@ class ChartTableViewCell: UITableViewCell {
             $0.top.leading.equalToSuperview().inset(8)
         }
         
-        print(data)
-        
         let chart = BarChart(data: data)
         chartView = UIHostingController(rootView: chart).view
         

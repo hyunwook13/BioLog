@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 struct ChartActionAble {
     let popHandler: () -> Void
 }
@@ -28,12 +29,9 @@ final class ChartCoordinator: Coordinator {
         let actions = ChartActionAble(
             popHandler: pop
         )
-        let vc = EditCharactersViewController()
-        nav.pushViewController(vc, animated: true)
-        
-//        let vc = container.makeChartViewController(action: actions)
-//        vc.modalPresentationStyle = .fullScreen
-//        nav.present(vc, animated: true)
+        let vc = container.makeChartViewController(action: actions)
+        vc.modalPresentationStyle = .fullScreen
+        nav.present(vc, animated: true)
     }
     
     private func pop() {

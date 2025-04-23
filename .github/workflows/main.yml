@@ -10,17 +10,38 @@ jobs:
     runs-on: macos-latest
 
     steps:
+      # 1. 코드 체크아웃
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2. Xcode 16.1 선택
+      - name: Setup Xcode 16.1
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.1'
+
+      # 3. 선택된 Xcode 버전 확인
+      - name: Debug Xcode Version
+        run: xcodebuild -version
+
+      # 4. Ruby 환경 설정
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2
 
-      - name: Install Fastlane
-        run: gem install fastlane
+      # 5. 사용 가능한 시뮬레이터 및 scheme 확인
+      - name: List available simulators
+        run: |
+          echo "---- simctl list devices ----"
+          xcrun simctl list devices available
+          echo ""
+          echo "---- xcodebuild showdestinations ----"
+          xcodebuild -showdestinations \
+            -workspace BioLog.xcworkspace \
+            -scheme BioLogTests
 
+      # 6. SSH 키 세팅 (match용)
       - name: Set up SSH access to match repo
         run: |
           mkdir -p ~/.ssh
@@ -28,32 +49,25 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
+      # 7. Fastlane API Key 생성
       - name: Generate Fastlane API Key files
         run: |
           echo "${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}" | base64 -d > fastlane/AuthKey.p8
           echo '{
-            "key_id": "${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}",
-            "issuer_id": "${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}",
+            "key_id": "'"${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}"'",
+            "issuer_id": "'"${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}"'",
             "key_filepath": "fastlane/AuthKey.p8"
           }' > fastlane/api_key.json
 
-      - name: Decrypt and install certificates (match)
-        env:
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-        run: fastlane match appstore --readonly
-
-      - name: Debug: List project directory
-        run: |
-          echo "Current directory: $(pwd)"
-          ls -la
-
-      - name: Install CocoaPods and dependencies
+      # 8. Bundler·Gems 설치 및 CocoaPods 설치
+      - name: Install Bundler, Gems and Pods
         run: |
           gem install bundler
-          bundle install || true
-          sudo gem install cocoapods
+          bundle install
+          bundle exec pod install --repo-update
 
+      # 9. 빌드 → TestFlight 배포
       - name: Build and upload to TestFlight
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-        run: fastlane custom_release
+        run: bundle exec fastlane custom_release

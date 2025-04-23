@@ -57,7 +57,6 @@ final class ChartViewModel: ChartViewModelAble {
                 self.notes = data.1
                 self.characters = data.2
                 self.categories = data.3
-                print("end",Date().timeIntervalSinceReferenceDate,self.characters.count)
                 
             })
             .bind { books, notes, characters, categories in

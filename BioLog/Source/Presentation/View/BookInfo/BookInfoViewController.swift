@@ -143,7 +143,7 @@ final class BookInfoViewController: UIViewController {
 //                        viewModel.selectedNote.onNext(note)
 //                    }
                 case .bookInfo(_):
-                    print("")
+                    return
                 }
             }
             .disposed(by: disposeBag)

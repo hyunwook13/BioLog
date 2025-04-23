@@ -158,7 +158,6 @@ iOSInjectionProject/
 ### SwiftPackageManager ###
 Packages
 xcuserdata
-*.xcodeproj
 
 
 ### SwiftPM ###
@@ -169,7 +168,6 @@ xcuserdata
 ## Xcode 8 and earlier
 
 ### Xcode Patch ###
-*.xcodeproj/*
 !*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/
 !*.xcodeproj/project.xcworkspace/
@@ -177,4 +175,10 @@ xcuserdata
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+!*.xcodeproj/xcshareddata/xcschemes/
+!*.xcodeproj/xcshareddata/xcschemes/*.xcscheme
+# Include entire Xcode project and its shared schemes
+!BioLog.xcodeproj/
+!BioLog.xcodeproj/**
+./coverage
 # End of https://www.toptal.com/developers/gitignore/api/xcode,swiftpm,swiftpackagemanager,cocoapods,swift,fastlane,macos
