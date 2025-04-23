@@ -44,7 +44,7 @@ jobs:
 
       - name: Debug: List project directory
         run: |
-          pwd
+          echo "Current directory: $(pwd)"
           ls -la
 
       - name: Install CocoaPods and dependencies
