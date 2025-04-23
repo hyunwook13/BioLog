@@ -21,18 +21,19 @@ jobs:
       - name: Install Fastlane
         run: gem install fastlane
 
-      - name: Generate AuthKey.p8
+      - name: Set up SSH access to match repo
         run: |
-          echo "$FASTLANE_APPLE_API_KEY_CONTENT" | base64 -d > fastlane/AuthKey.p8
-        env:
-          FASTLANE_APPLE_API_KEY_CONTENT: ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
+          mkdir -p ~/.ssh
+          echo "${{ secrets.MATCH_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
 
       - name: Generate Fastlane API Key JSON file
         run: |
           echo '{
             "key_id": "${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}",
             "issuer_id": "${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}",
-            "key": "'$(echo "${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}" | base64 -d)'"
+            "key": "'$(echo "${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT}" | base64 -d)'"
           }' > fastlane/api_key.json
 
       - name: Decrypt and install certificates (match)
@@ -43,4 +44,4 @@ jobs:
       - name: Build and upload to TestFlight
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-        run: fastlane release
+        run: fastlane custom_release
