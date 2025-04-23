@@ -2,29 +2,23 @@ default_platform(:ios)
 
 platform :ios do
   desc "커스텀 릴리즈"
-  lane :custom_lane do
-    # 1) App Store Connect API 키 설정
-    api_key = app_store_connect_api_key(
-      key_id:       ENV["FASTLANE_APPLE_API_KEY_KEY_ID"],
-      issuer_id:    ENV["FASTLANE_APPLE_API_KEY_ISSUER_ID"],
-      key_content: ENV["FASTLANE_APPLE_API_KEY_CONTENT"],
-      is_key_content_base64: true
-    )
+  lane :custom_release do
+    # ① 푸시 인증서·설정 준비
 
-    # 2) 이후 액션에 api_key 옵션 전달
-    #    예: TestFlight 업로드
-    pilot(
-      api_key: api_key,
-      skip_waiting_for_build_processing: true
-    )
+    cocoapods(clean_install: true, try_repo_update_on_error: true )
+    run_tests(scheme: "BioLogTests", fail_build: false)
 
-    #    예: 메타데이터/스크린샷 배포
-    deliver(
-      api_key:                   api_key,
-      force:                     true,
-      skip_screenshots:          false,
-      skip_metadata:             false,
-      submit_for_review:         true
-    )
+    # ② App Store Connect API 키 인증
+    match(type:"appstore")
+    build_app(scheme: "BioLog")
+    pilot( api_key_path: "fastlane/6UA8N7RLF2.json",
+           ipa: "./BioLog.ipa"   )
+  end
+
+  desc "빌드→아카이브→내보내기→TestFlight 업로드"
+  lane :release do
+    match(type:"appstore")
+    build_app(scheme: "BioLog")
+    pilot(api_key_path: "fastlane/6UA8N7RLF2.json", ipa: "./BioLog.ipa")
   end
 end

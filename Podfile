@@ -19,9 +19,6 @@ target 'BioLog' do
     pod 'RxTest'
   end
 
-  target 'BioLogUITests' do
-    inherit! :search_paths
-  end
 end
 
 post_install do |installer|
