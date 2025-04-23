@@ -10,7 +10,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Set up Ruby
@@ -21,15 +21,26 @@ jobs:
       - name: Install Fastlane
         run: gem install fastlane
 
-      - name: Generate App Store Connect API Key file
+      - name: Generate AuthKey.p8
         run: |
           echo "$FASTLANE_APPLE_API_KEY_CONTENT" | base64 -d > fastlane/AuthKey.p8
         env:
           FASTLANE_APPLE_API_KEY_CONTENT: ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
 
+      - name: Generate Fastlane API Key JSON file
+        run: |
+          echo '{
+            "key_id": "${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}",
+            "issuer_id": "${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}",
+            "key": "'$(echo "${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}" | base64 -d)'"
+          }' > fastlane/api_key.json
+
+      - name: Decrypt and install certificates (match)
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        run: fastlane match appstore --readonly
+
       - name: Build and upload to TestFlight
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-        run: |
-          fastlane pilot \
-            --api_key_path ./fastlane/api_key.json
+        run: fastlane release
