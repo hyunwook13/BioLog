@@ -2,6 +2,8 @@ platform :ios, '16.0'
 
 inhibit_all_warnings!
 
+project 'BioLog.xcodeproj' 
+
 target 'BioLog' do
   use_frameworks!
 
