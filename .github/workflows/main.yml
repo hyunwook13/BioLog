@@ -28,12 +28,13 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      - name: Generate Fastlane API Key JSON file
+      - name: Generate Fastlane API Key files
         run: |
+          echo "${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}" | base64 -d > fastlane/AuthKey.p8
           echo '{
             "key_id": "${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}",
             "issuer_id": "${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}",
-            "key": "'$(echo "${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT}" | base64 -d)'"
+            "key_filepath": "fastlane/AuthKey.p8"
           }' > fastlane/api_key.json
 
       - name: Decrypt and install certificates (match)
