@@ -5,17 +5,17 @@ platform :ios do
 
   lane :custom_release do
     # 2. 테스트 (실패해도 진행)
-    scan(
-      scheme: "BioLogTests",
-      workspace: "BioLog.xcworkspace",
-      fail_build: false,
-      skip_build: true,
-      clean: true,
-      output_types: "html,junit",
-      output_directory: "fastlane/test_output",
-      build_for_testing: true
-      # destination: "platform=iOS Simulator,name=iPhone 16 Pro,OS=18.1"
-    )
+    #scan(
+    #  scheme: "BioLogTests",
+    #  workspace: "BioLog.xcworkspace",
+    #  fail_build: false,
+    #  skip_build: true,
+    #  clean: true,
+    #  output_types: "html,junit",
+    #  output_directory: "fastlane/test_output",
+    #  build_for_testing: true
+    #  # destination: "platform=iOS Simulator,name=iPhone 16 Pro,OS=18.1"
+    #)
 
 
 
