@@ -75,6 +75,7 @@ final class EditNoteViewModelTests: XCTestCase {
     
     func test_저장_실패시_pop액션이_호출되지않는지() {
         // given
+        self.mockUseCase.isFailed = true
 
         scheduler.scheduleAt(10) {
             self.sut.context.onNext("A")

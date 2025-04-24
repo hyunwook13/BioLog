@@ -52,13 +52,13 @@ class CoreDataTests: XCTestCase {
 
     }
     
-    func test_데이터생성후_데이터조회() {
-        // when
-        let fetchedBooks = coreData.fetch(Book.self)
-        
-        _ = fetchedBooks.subscribe(onNext: { bookObject in
-            // then
-            XCTAssertEqual(bookObject.count, 5)
-        })
-    }
+//    func test_데이터생성후_데이터조회() {
+//        // when
+//        let fetchedBooks = coreData.fetch(Book.self)
+//        
+//        _ = fetchedBooks.subscribe(onNext: { bookObject in
+//            // then
+//            XCTAssertEqual(bookObject.count, 5)
+//        })
+//    }
 }

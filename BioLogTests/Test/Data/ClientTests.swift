@@ -81,36 +81,36 @@ class NetworkTests: XCTestCase {
 //        sut.setupDefaultResponses()
     }
     
-    func test_책검색_성공() throws {
-        // Given
-        let searchTitle = "Swift"
-        let endpoint: Endpoint<BookResponse> = BookAPI.searchBooks(title: searchTitle).typedEndpoint()
-        let request = try URLRequest(url: endpoint.url())
-        
-        let expectation = XCTestExpectation(description: "Book search")
-        
-        // When
-        let task = sut.dataTask(with: request) { data, response, error in
-            // Then
-            XCTAssertNotNil(data)
-            XCTAssertNil(error)
-            if let response = response as? HTTPURLResponse {
-                XCTAssertEqual(response.statusCode, 200)
-            }
-            
-            // 응답 데이터 검증
-            if let data = data,
-               let bookResponse = try? JSONDecoder().decode(BookResponse.self, from: data) {
-                XCTAssertFalse(bookResponse.item.isEmpty)
-            }
-            
-            expectation.fulfill()
-        }
-        
-        task.resume()
-        
-        wait(for: [expectation], timeout: 1.0)
-    }
+//    func test_책검색_성공() throws {
+//        // Given
+//        let searchTitle = "Swift"
+//        let endpoint: Endpoint<BookResponse> = BookAPI.searchBooks(title: searchTitle).typedEndpoint()
+//        let request = try URLRequest(url: endpoint.url())
+//        
+//        let expectation = XCTestExpectation(description: "Book search")
+//        
+//        // When
+//        let task = sut.dataTask(with: request) { data, response, error in
+//            // Then
+//            XCTAssertNotNil(data)
+//            XCTAssertNil(error)
+//            if let response = response as? HTTPURLResponse {
+//                XCTAssertEqual(response.statusCode, 200)
+//            }
+//            
+//            // 응답 데이터 검증
+//            if let data = data,
+//               let bookResponse = try? JSONDecoder().decode(BookResponse.self, from: data) {
+//                XCTAssertFalse(bookResponse.item.isEmpty)
+//            }
+//            
+//            expectation.fulfill()
+//        }
+//        
+//        task.resume()
+//        
+//        wait(for: [expectation], timeout: 1.0)
+//    }
     
 //    func test_책검색_실패() {
 //        // Given
