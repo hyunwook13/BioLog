@@ -36,18 +36,13 @@ jobs:
       - name: Install Fastlane
         run: gem install fastlane
 
-      # 5️⃣ (pilot용) Apple API Key 파일 생성
-      - name: Generate Fastlane API Key JSON
+      - name: Generate Fastlane API Key JSON file
         run: |
-          mkdir -p fastlane
-          echo "${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}" | base64 -d > fastlane/AuthKey.p8
-          cat <<EOF > fastlane/api_key.json
-          {
+          echo '{
             "key_id": "${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}",
             "issuer_id": "${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}",
-            "key_filepath": "fastlane/AuthKey.p8"
-          }
-          EOF
+            "key": "'$(echo "${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}" | base64 -d)'"
+          }' > fastlane/api_key.json
 
       # 6️⃣ 인증서·프로비저닝 설치
       - name: Match certificates & profiles
