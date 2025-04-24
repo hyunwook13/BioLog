@@ -1,37 +1,46 @@
 name: iOS CI/CD
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: macos-latest
-    env:
-      MATCH_GIT_URL:    git@github.com:hyunwook13/BioLog.git   # 본인 레포
-      MATCH_GIT_BRANCH: master                               # 인증서가 저장된 브랜치
-      MATCH_PASSWORD:   ${{ secrets.MATCH_PASSWORD }}
 
     steps:
-    - name: Checkout full history
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
+      # 1) 소스 체크아웃
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-    - name: Set up SSH for match
-      uses: shimataro/ssh-key-action@v2
-      with:
-        key:         ${{ secrets.MATCH_SSH_KEY }}
-        known_hosts: ${{ secrets.KNOWN_HOSTS }}
+      # 2) SSH 에이전트 설정 (Match 리포지토리 접근용)
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.8.1
+        with:
+          ssh-private-key: ${{ secrets.MATCH_SSH_KEY }}
 
-    - name: Set up Ruby & install gems
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 3.2
-    - run: |
-        gem install bundler
-        bundle install
+      # 3) Ruby 환경 구성
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2
 
-    - name: Install CocoaPods
-      run: bundle exec pod install --repo-update
+      # 4) Bundler + Gem 설치
+      - name: Install Bundler & Gems
+        run: |
+          gem install bundler
+          bundle install
 
-    - name: Run match → build → pilot
-      run: bundle exec fastlane beta
+      # 5) CocoaPods 설치
+      - name: Install CocoaPods
+        run: bundle exec pod install --repo-update
+
+      # 6) Fastlane beta lane 실행 (match → build → upload_to_testflight)
+      - name: Run Fastlane β Release
+        env:
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        run: bundle exec fastlane beta
