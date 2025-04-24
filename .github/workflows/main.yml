@@ -8,66 +8,55 @@ on:
 jobs:
   build:
     runs-on: macos-latest
+    env:
+      # match에 사용할 Git repo URL과 비밀번호
+      MATCH_GIT_URL: git@github.com:<your-org>/certificates.git
+      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
 
     steps:
-      # 1. 코드 체크아웃
+      # 1️⃣ 코드 체크아웃 (match가 전체 히스토리 필요)
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      # 2. Xcode 16.1 선택
-      - name: Setup Xcode 16.1
-        uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.1'
+          fetch-depth: 0
 
-      # 3. 선택된 Xcode 버전 확인
-      - name: Debug Xcode Version
-        run: xcodebuild -version
+      # 2️⃣ SSH 키 로드 (match용)
+      - name: Start ssh-agent and add key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.MATCH_SSH_KEY }}
 
-      # 4. Ruby 환경 설정
+      # 3️⃣ Ruby 설치
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2
 
-      # 5. 사용 가능한 시뮬레이터 및 scheme 확인
-      - name: List available simulators
-        run: |
-          echo "---- simctl list devices ----"
-          xcrun simctl list devices available
-          echo ""
-          echo "---- xcodebuild showdestinations ----"
-          xcodebuild -showdestinations \
-            -workspace BioLog.xcworkspace \
-            -scheme BioLogTests
+      # 4️⃣ Fastlane 설치
+      - name: Install Fastlane
+        run: gem install fastlane
 
-      # 6. SSH 키 세팅 (match용)
-      - name: Set up SSH access to match repo
+      # 5️⃣ (pilot용) Apple API Key 파일 생성
+      - name: Generate Fastlane API Key JSON
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.MATCH_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-      # 7. Fastlane API Key 생성
-      - name: Generate Fastlane API Key files
-        run: |
+          mkdir -p fastlane
           echo "${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}" | base64 -d > fastlane/AuthKey.p8
-          echo '{
-            "key_id": "'"${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}"'",
-            "issuer_id": "'"${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}"'",
+          cat <<EOF > fastlane/api_key.json
+          {
+            "key_id": "${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}",
+            "issuer_id": "${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}",
             "key_filepath": "fastlane/AuthKey.p8"
-          }' > fastlane/api_key.json
+          }
+          EOF
 
-      # 8. Bundler·Gems 설치 및 CocoaPods 설치
-      - name: Install Bundler, Gems and Pods
-        run: |
-          gem install bundler
-          bundle install
-          bundle exec pod install --repo-update
+      # 6️⃣ 인증서·프로비저닝 설치
+      - name: Match certificates & profiles
+        run: fastlane match appstore --readonly
 
-      # 9. 빌드 → TestFlight 배포
-      - name: Build and upload to TestFlight
-        env:
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-        run: bundle exec fastlane custom_release
+      # 7️⃣ 앱 빌드
+      - name: Build the app
+        run: fastlane build_app --scheme BioLog
+
+      # 8️⃣ TestFlight에 업로드
+      - name: Upload to TestFlight
+        run: fastlane pilot upload --api_key_path fastlane/api_key.json --ipa ./BioLog.ipa
