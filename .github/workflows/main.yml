@@ -23,13 +23,7 @@ jobs:
         with:
           key: ${{ secrets.MATCH_SSH_KEY }}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
-
-      # 3) Node.js (필요하면 유지)
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
-
+          
       # 4) Ruby
       - name: Setup Ruby
         uses: actions/setup-ruby@v1
