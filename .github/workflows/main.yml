@@ -16,15 +16,14 @@ jobs:
           fetch-depth: 0
 
       # 2) SSH 에이전트 띄우고, 키 추가
-      - name: Start SSH agent & add key
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.8.1
+        with:
+          ssh-private-key: ${{ secrets.MATCH_SSH_KEY }}
+
+      - name: Add GitHub to known_hosts
         run: |
-          # SSH 에이전트 실행
-          eval "$(ssh-agent -s)"
-          # secrets.MATCH_SSH_KEY 는 base64 인코딩된 private key 라고 가정
-          echo "${{ secrets.MATCH_SSH_KEY }}" | base64 --decode | ssh-add -
-          # 호스트 키 검증 파일에 GitHub.com 추가
           mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
       # 3) Ruby 환경 구성
