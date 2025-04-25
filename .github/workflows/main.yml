@@ -1,50 +1,37 @@
-name: iOS CI/CD
+name: App Store
 
 on:
   push:
-    branches: [ main ]
+    tags:
+      - "v*"
 
 jobs:
-  build:
+  appstore:
     runs-on: macos-latest
+    strategy:
+      matrix:
+        node: [ '12', '14' ]
+        ruby: [ '2.5', '2.6' ]
 
     steps:
-      # 1) 소스 체크아웃
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v2
+      - uses: shimataro/ssh-key-action@v2
         with:
-          fetch-depth: 0
-
-      # 2) SSH 에이전트 띄우고, 키 추가
-      - name: Set up SSH agent
-        uses: webfactory/ssh-agent@v0.8.1
+          key: ${{ secrets.SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+      - uses: actions/setup-node@v2
         with:
-          ssh-private-key: ${{ secrets.MATCH_SSH_KEY }}
-
-      - name: Add GitHub to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-      # 3) Ruby 환경 구성
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+          node-version: ${{ matrix.node }}
+      - uses: actions/setup-ruby@v1
         with:
-          ruby-version: 3.2
-
-      # 4) Bundler + Gem 설치
-      - name: Install Bundler & Gems
-        run: |
-          gem install bundler
-          bundle install --jobs 4 --retry 3
-
-      # 5) CocoaPods 설치
-      - name: Install CocoaPods
-        run: bundle exec pod install --repo-update
-
-      # 6) Fastlane beta lane 실행 (match → build → upload_to_testflight)
-      - name: Run Fastlane β Release
+          ruby-version: ${{ matrix.ruby }}
+      - run: brew install fastlane
+      - run: pod install
+      - run: fastlane release
         env:
-          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-        run: bundle exec fastlane beta
+          KEYCHAIN_NAME: ${{ secrets.KEYCHAIN_NAME }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
