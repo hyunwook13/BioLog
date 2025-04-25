@@ -1,8 +1,8 @@
 name: App Store
 
 on:
-   push:
-     branches: [ main ]
+  push:
+    branches: [ main ]
 
 jobs:
   appstore:
@@ -13,24 +13,44 @@ jobs:
         ruby: [ '2.5', '2.6' ]
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: shimataro/ssh-key-action@v2
+      # 1) 소스 체크아웃
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # 2) SSH 키로 match 리포지토리 접근
+      - name: Set up SSH key
+        uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{ secrets.SSH_KEY }}
+          key: ${{ secrets.MATCH_SSH_KEY }}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
-      - uses: actions/setup-node@v2
+
+      # 3) Node.js (필요하면 유지)
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
-      - uses: actions/setup-ruby@v1
+
+      # 4) Ruby
+      - name: Setup Ruby
+        uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - run: brew install fastlane
-      - run: pod install
-      - run: fastlane release
+
+      # 5) Fastlane 설치
+      - name: Install Fastlane
+        run: brew install fastlane
+
+      # 6) CocoaPods
+      - name: Install Pods
+        run: pod install
+
+      # 7) 릴리즈
+      - name: Run fastlane release
         env:
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          KEYCHAIN_NAME: ${{ secrets.KEYCHAIN_NAME }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
-          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
-          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+          MATCH_PASSWORD:                    ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_USER:                     ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD:                 ${{ secrets.FASTLANE_PASSWORD }}
+          APP_STORE_CONNECT_API_KEY_ID:      ${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID:   ${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
+        run: fastlane release
