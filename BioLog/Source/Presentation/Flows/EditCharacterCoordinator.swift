@@ -72,9 +72,9 @@ class EditCharacterCoordinator: Coordinator, ImagePickerDelegate {
     // ImagePickerDelegate method
     func didSelectImage(_ image: UIImage) {
         // 선택된 이미지를 EditCharacterViewController로 전달
-        if let editCharacterVC = nav.viewControllers.last as? EditCharacterViewController {
-            editCharacterVC.updateProfileImage(image)
-        }
+//        if let editCharacterVC = nav.viewControllers.last as? EditCharacterViewController {
+//            editCharacterVC.updateProfileImage(image)
+//        }
     }
 }
 

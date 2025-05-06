@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		06785665B3F35026B704846F /* Pods_BioLogTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A45E9B741626B0179DE5ED89 /* Pods_BioLogTests.framework */; };
-		5A573836DD02FD99E7059A11 /* Pods_BioLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D3239E9431E7D018C41B360 /* Pods_BioLog.framework */; };
 		7C4E349A2DBA29670006EAFD /* AppDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E341D2DBA29670006EAFD /* AppDIContainer.swift */; };
 		7C4E349B2DBA29670006EAFD /* BookInfoDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E341E2DBA29670006EAFD /* BookInfoDIContainer.swift */; };
 		7C4E349C2DBA29670006EAFD /* BookshelfDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4E341F2DBA29670006EAFD /* BookshelfDIContainer.swift */; };
@@ -99,6 +97,18 @@
 		7C4E34F22DBA29670006EAFD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C4E341B2DBA29670006EAFD /* LaunchScreen.storyboard */; };
 		7C66118C2DCB962F0045ACA2 /* BookMigrationPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C66118B2DCB962F0045ACA2 /* BookMigrationPolicy.swift */; };
 		7C66118F2DCB97CC0045ACA2 /* BioLogModel.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 7C66118E2DCB97CC0045ACA2 /* BioLogModel.xcmappingmodel */; };
+		7C7419AD2DCCE7B100E7E745 /* RxBlocking in Frameworks */ = {isa = PBXBuildFile; productRef = 7C7419AC2DCCE7B100E7E745 /* RxBlocking */; };
+		7C7419BD2DCCE7B100E7E745 /* RxTest in Frameworks */ = {isa = PBXBuildFile; productRef = 7C7419BC2DCCE7B100E7E745 /* RxTest */; };
+		7CAF622C2DCCEA8C002C3E3B /* RxBlocking in Frameworks */ = {isa = PBXBuildFile; productRef = 7CAF622B2DCCEA8C002C3E3B /* RxBlocking */; };
+		7CAF62302DCCEA8C002C3E3B /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 7CAF622F2DCCEA8C002C3E3B /* RxCocoa */; };
+		7CAF62342DCCEA8C002C3E3B /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 7CAF62332DCCEA8C002C3E3B /* RxRelay */; };
+		7CAF62382DCCEA8C002C3E3B /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 7CAF62372DCCEA8C002C3E3B /* RxSwift */; };
+		7CAF623C2DCCEA8C002C3E3B /* RxTest in Frameworks */ = {isa = PBXBuildFile; productRef = 7CAF623B2DCCEA8C002C3E3B /* RxTest */; };
+		7CAF62412DCCEAA2002C3E3B /* Differentiator in Frameworks */ = {isa = PBXBuildFile; productRef = 7CAF62402DCCEAA2002C3E3B /* Differentiator */; };
+		7CAF62432DCCEAA2002C3E3B /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 7CAF62422DCCEAA2002C3E3B /* RxDataSources */; };
+		7CAF62462DCCEADB002C3E3B /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7CAF62452DCCEADB002C3E3B /* SnapKit */; };
+		7CAF624A2DCCEB11002C3E3B /* RxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAF62492DCCEB11002C3E3B /* RxViewController.swift */; };
+		7CAF624D2DCCEBC9002C3E3B /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 7CAF624C2DCCEBC9002C3E3B /* RxCocoa */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,8 +122,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2D3239E9431E7D018C41B360 /* Pods_BioLog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BioLog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		43598BEE5CAC6AA60688581D /* Pods-BioLogTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BioLogTests.debug.xcconfig"; path = "Target Support Files/Pods-BioLogTests/Pods-BioLogTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7C21A9DB2D6CB27E006A1489 /* BioLog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BioLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C21A9F52D6CB280006A1489 /* BioLogTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BioLogTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C4E34182DBA29670006EAFD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -211,10 +219,7 @@
 		7C66118B2DCB962F0045ACA2 /* BookMigrationPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookMigrationPolicy.swift; sourceTree = "<group>"; };
 		7C66118D2DCB97740045ACA2 /* BioLog_v4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BioLog_v4.xcdatamodel; sourceTree = "<group>"; };
 		7C66118E2DCB97CC0045ACA2 /* BioLogModel.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = BioLogModel.xcmappingmodel; sourceTree = "<group>"; };
-		A45E9B741626B0179DE5ED89 /* Pods_BioLogTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BioLogTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CCCDA405256CF394FCA9FF21 /* Pods-BioLog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BioLog.debug.xcconfig"; path = "Target Support Files/Pods-BioLog/Pods-BioLog.debug.xcconfig"; sourceTree = "<group>"; };
-		D2FB9DDB43AD177DD5368B9A /* Pods-BioLogTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BioLogTests.release.xcconfig"; path = "Target Support Files/Pods-BioLogTests/Pods-BioLogTests.release.xcconfig"; sourceTree = "<group>"; };
-		DACBBCA4EA41E6A190F89996 /* Pods-BioLog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BioLog.release.xcconfig"; path = "Target Support Files/Pods-BioLog/Pods-BioLog.release.xcconfig"; sourceTree = "<group>"; };
+		7CAF62492DCCEB11002C3E3B /* RxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -226,7 +231,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5A573836DD02FD99E7059A11 /* Pods_BioLog.framework in Frameworks */,
+				7CAF62412DCCEAA2002C3E3B /* Differentiator in Frameworks */,
+				7CAF624D2DCCEBC9002C3E3B /* RxCocoa in Frameworks */,
+				7CAF62342DCCEA8C002C3E3B /* RxRelay in Frameworks */,
+				7CAF62382DCCEA8C002C3E3B /* RxSwift in Frameworks */,
+				7CAF62432DCCEAA2002C3E3B /* RxDataSources in Frameworks */,
+				7CAF62462DCCEADB002C3E3B /* SnapKit in Frameworks */,
+				7CAF62302DCCEA8C002C3E3B /* RxCocoa in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -234,40 +245,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				06785665B3F35026B704846F /* Pods_BioLogTests.framework in Frameworks */,
+				7CAF623C2DCCEA8C002C3E3B /* RxTest in Frameworks */,
+				7C7419AD2DCCE7B100E7E745 /* RxBlocking in Frameworks */,
+				7C7419BD2DCCE7B100E7E745 /* RxTest in Frameworks */,
+				7CAF622C2DCCEA8C002C3E3B /* RxBlocking in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		085F8AF745EEA4542F01AF29 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				2D3239E9431E7D018C41B360 /* Pods_BioLog.framework */,
-				A45E9B741626B0179DE5ED89 /* Pods_BioLogTests.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		4C9AF60C44D09DB05117CE62 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				CCCDA405256CF394FCA9FF21 /* Pods-BioLog.debug.xcconfig */,
-				DACBBCA4EA41E6A190F89996 /* Pods-BioLog.release.xcconfig */,
-				43598BEE5CAC6AA60688581D /* Pods-BioLogTests.debug.xcconfig */,
-				D2FB9DDB43AD177DD5368B9A /* Pods-BioLogTests.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		7C21A9D22D6CB27E006A1489 = {
 			isa = PBXGroup;
 			children = (
 				7C4E34962DBA29670006EAFD /* BioLog */,
 				7C21A9F82D6CB280006A1489 /* BioLogTests */,
-				085F8AF745EEA4542F01AF29 /* Frameworks */,
-				4C9AF60C44D09DB05117CE62 /* Pods */,
+				7CAF624B2DCCEBC9002C3E3B /* Frameworks */,
 				7C21A9DC2D6CB27E006A1489 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -497,6 +490,7 @@
 			children = (
 				7C4E34642DBA29670006EAFD /* HangeulChecker.swift */,
 				7C4E34652DBA29670006EAFD /* UIImage.swift */,
+				7CAF62492DCCEB11002C3E3B /* RxViewController.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -660,6 +654,13 @@
 			path = BioLog;
 			sourceTree = "<group>";
 		};
+		7CAF624B2DCCEBC9002C3E3B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -667,11 +668,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7C21AA082D6CB280006A1489 /* Build configuration list for PBXNativeTarget "BioLog" */;
 			buildPhases = (
-				D567702D9A06AC60A89D4BAD /* [CP] Check Pods Manifest.lock */,
 				7C21A9D72D6CB27E006A1489 /* Sources */,
 				7C21A9D82D6CB27E006A1489 /* Frameworks */,
 				7C21A9D92D6CB27E006A1489 /* Resources */,
-				221F258DACC7E98716AD8AB0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -686,11 +685,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7C21AA0D2D6CB280006A1489 /* Build configuration list for PBXNativeTarget "BioLogTests" */;
 			buildPhases = (
-				0F48EB0CCCE3FBD660E4E043 /* [CP] Check Pods Manifest.lock */,
 				7C21A9F12D6CB280006A1489 /* Sources */,
 				7C21A9F22D6CB280006A1489 /* Frameworks */,
 				7C21A9F32D6CB280006A1489 /* Resources */,
-				229EEFAF6E74A13575AE028A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -734,6 +731,11 @@
 			);
 			mainGroup = 7C21A9D22D6CB27E006A1489;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7CAF622A2DCCEA8C002C3E3B /* XCRemoteSwiftPackageReference "RxSwift" */,
+				7CAF623F2DCCEAA2002C3E3B /* XCRemoteSwiftPackageReference "RxDataSources" */,
+				7CAF62442DCCEADB002C3E3B /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = 7C21A9DC2D6CB27E006A1489 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -762,95 +764,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		0F48EB0CCCE3FBD660E4E043 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BioLogTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		221F258DACC7E98716AD8AB0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-BioLog/Pods-BioLog-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-BioLog/Pods-BioLog-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BioLog/Pods-BioLog-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		229EEFAF6E74A13575AE028A /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-BioLogTests/Pods-BioLogTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-BioLogTests/Pods-BioLogTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BioLogTests/Pods-BioLogTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D567702D9A06AC60A89D4BAD /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BioLog-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7C21A9D72D6CB27E006A1489 /* Sources */ = {
@@ -907,6 +820,7 @@
 				7C4E34C72DBA29670006EAFD /* Coordinator.swift in Sources */,
 				7C4E34C82DBA29670006EAFD /* EditCharacterCoordinator.swift in Sources */,
 				7C4E34C92DBA29670006EAFD /* EditNoteCoordinator.swift in Sources */,
+				7CAF624A2DCCEB11002C3E3B /* RxViewController.swift in Sources */,
 				7C4E34CA2DBA29670006EAFD /* MainCoordinator.swift in Sources */,
 				7C4E34CB2DBA29670006EAFD /* PreviewCoordinator.swift in Sources */,
 				7C4E34CC2DBA29670006EAFD /* SearchBookCoordinator.swift in Sources */,
@@ -979,7 +893,6 @@
 /* Begin XCBuildConfiguration section */
 		7C21AA092D6CB280006A1489 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CCCDA405256CF394FCA9FF21 /* Pods-BioLog.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1015,7 +928,6 @@
 		};
 		7C21AA0A2D6CB280006A1489 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DACBBCA4EA41E6A190F89996 /* Pods-BioLog.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1170,7 +1082,6 @@
 		};
 		7C21AA0E2D6CB280006A1489 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 43598BEE5CAC6AA60688581D /* Pods-BioLogTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1194,7 +1105,6 @@
 		};
 		7C21AA0F2D6CB280006A1489 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D2FB9DDB43AD177DD5368B9A /* Pods-BioLogTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1247,6 +1157,99 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7C7419AB2DCCE7B100E7E745 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.9.0;
+			};
+		};
+		7CAF622A2DCCEA8C002C3E3B /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.9.0;
+			};
+		};
+		7CAF623F2DCCEAA2002C3E3B /* XCRemoteSwiftPackageReference "RxDataSources" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RxSwiftCommunity/RxDataSources";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
+			};
+		};
+		7CAF62442DCCEADB002C3E3B /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7C7419AC2DCCE7B100E7E745 /* RxBlocking */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7C7419AB2DCCE7B100E7E745 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxBlocking;
+		};
+		7C7419BC2DCCE7B100E7E745 /* RxTest */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7C7419AB2DCCE7B100E7E745 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxTest;
+		};
+		7CAF622B2DCCEA8C002C3E3B /* RxBlocking */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7CAF622A2DCCEA8C002C3E3B /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxBlocking;
+		};
+		7CAF622F2DCCEA8C002C3E3B /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7CAF622A2DCCEA8C002C3E3B /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		7CAF62332DCCEA8C002C3E3B /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7CAF622A2DCCEA8C002C3E3B /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		7CAF62372DCCEA8C002C3E3B /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7CAF622A2DCCEA8C002C3E3B /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		7CAF623B2DCCEA8C002C3E3B /* RxTest */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7CAF622A2DCCEA8C002C3E3B /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxTest;
+		};
+		7CAF62402DCCEAA2002C3E3B /* Differentiator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7CAF623F2DCCEAA2002C3E3B /* XCRemoteSwiftPackageReference "RxDataSources" */;
+			productName = Differentiator;
+		};
+		7CAF62422DCCEAA2002C3E3B /* RxDataSources */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7CAF623F2DCCEAA2002C3E3B /* XCRemoteSwiftPackageReference "RxDataSources" */;
+			productName = RxDataSources;
+		};
+		7CAF62452DCCEADB002C3E3B /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7CAF62442DCCEADB002C3E3B /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		7CAF624C2DCCEBC9002C3E3B /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7CAF622A2DCCEA8C002C3E3B /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		7C4E34382DBA29670006EAFD /* BioLog.xcdatamodeld */ = {

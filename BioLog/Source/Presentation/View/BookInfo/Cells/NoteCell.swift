@@ -58,4 +58,3 @@ final class NoteCell: UITableViewCell {
         pageLabel.text = note.page
     }
 }
-

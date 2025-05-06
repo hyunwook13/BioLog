@@ -5,8 +5,7 @@
 //  Created by 이현욱 on 2/26/25.
 //
 
-import Foundation
-
+import UIKit
 
 import RxSwift
 import RxCocoa
@@ -89,7 +88,7 @@ final class MainViewModel: MainViewModelAble {
             }.disposed(by: disposeBag)
         
         Observable.merge(viewWillAppearSubject, booksChangedSubject)
-//            .throttle(.seconds(1), latest: false, scheduler: MainScheduler.instance)
+        //            .throttle(.seconds(1), latest: false, scheduler: MainScheduler.instance)
             .flatMapLatest { [weak self] _ -> Observable<[BookDTO]> in
                 guard let self = self else { return .just([]) }
                 return self.usecase.fetchReadingBooks()

@@ -11,7 +11,6 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
-import RxViewController
 import RxDataSources
 
 final class BookInfoViewController: UIViewController {
