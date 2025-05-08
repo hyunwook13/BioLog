@@ -1,50 +1,26 @@
-name: App Store
+name: CI Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
-  appstore:
+  release:
+    name: Custom Release
     runs-on: macos-latest
-    strategy:
-      matrix:
-        node: [ '12', '14' ]
-        ruby: [ '2.5', '2.6' ]
-
     steps:
-      # 1) 소스 체크아웃
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      # 2) SSH 키로 match 리포지토리 접근
-      - name: Set up SSH key
-        uses: shimataro/ssh-key-action@v2
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          key: ${{ secrets.MATCH_SSH_KEY }}
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}
-          
-      # 4) Ruby
-      - name: Setup Ruby
-        uses: actions/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.ruby }}
-
-      # 5) Fastlane 설치
-      - name: Install Fastlane
-        run: brew install fastlane
-
-      # 6) CocoaPods
-      - name: Install Pods
-        run: pod install
-
-      # 7) 릴리즈
-      - name: Run fastlane release
+          ruby-version: 2.7
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle install
+      - name: Run fastlane custom_release
+        run: bundle exec fastlane custom_release
         env:
-          MATCH_PASSWORD:                    ${{ secrets.MATCH_PASSWORD }}
-          FASTLANE_USER:                     ${{ secrets.FASTLANE_USER }}
-          FASTLANE_PASSWORD:                 ${{ secrets.FASTLANE_PASSWORD }}
-          APP_STORE_CONNECT_API_KEY_ID:      ${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}
-          APP_STORE_CONNECT_API_ISSUER_ID:   ${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}
-          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
-        run: fastlane release
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
