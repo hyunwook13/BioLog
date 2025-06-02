@@ -1,7 +1,7 @@
 # fastlane/Matchfile
 
 # 1) 레포 URL (HTTPS로 변경)
-git_url("https://${MATCH_GIT_URL}@github.com/hyunwook13/match_repo.git")
+git_url("https://hyunwook13:#{ENV['MATCH_GIT_URL']}@github.com/hyunwook13/match_repo.git")
 
 # 2) 브랜치
 git_branch("master")
