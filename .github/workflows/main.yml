@@ -47,3 +47,4 @@ jobs:
           FASTLANE_USER:                       ${{ secrets.FASTLANE_USER }}
           FASTLANE_PASSWORD:                   ${{ secrets.FASTLANE_PASSWORD }}
           MATCH_KEYCHAIN_PASSWORD:             ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
+          MATCH_PASSWORD:                      ${{ secrets.MATCH_PASSWORD }}
