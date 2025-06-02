@@ -25,6 +25,14 @@ jobs:
       - name: Add CI platform support
         run: bundle lock --add-platform arm64-darwin-23
 
+      - name: Manual Clone Test
+        run: |
+          echo "→ 실제 시도할 URL(마스킹 전) = https://hyunwook13:${MATCH_GIT_URL}@github.com/hyunwook13/match_repo.git"
+          git clone "https://hyunwook13:${MATCH_GIT_URL}@github.com/hyunwook13/match_repo.git" ./_tmp_match_repo || true
+          ls -la ./_tmp_match_repo
+        env:
+          MATCH_GIT_URL: ${{ secrets.REPO_PAT }}
+
       # ──────────────────────────────────────────────────────────────────────────────
       # 3) Ruby 설치
       - name: Set up Ruby
