@@ -33,8 +33,16 @@ platform :ios do
       scheme: "BioLog"
     )
 
+    api_key = app_store_connect_api_key(
+      key_id: ENV["FASTLANE_APPLE_API_KEY_KEY_ID"],
+      issuer_id: ENV["FASTLANE_APPLE_API_KEY_ISSUER_ID"],
+      key_content: ENV["FASTLANE_APPLE_API_KEY_CONTENT"],
+      is_key_content_base64: true
+    )
+    UI.message("🔑 api_key: #{api_key.inspect}")
+
     pilot(
-      api_key_path: "fastlane/api_key.json",
+      api_key: api_key,
       ipa: "./BioLog.ipa"
     )
   end
