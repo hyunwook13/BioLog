@@ -17,6 +17,8 @@ jobs:
       # 1) 소스코드 checkout
       - name: actions/checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       # ──────────────────────────────────────────────────────────────────────────────
       # 2) CI 플랫폼용 lockfile 업데이트 (필요 시, Apple Silicon 지원)
@@ -29,14 +31,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
-
-      - name: Debug MATCH_GIT_URL
-        run: |
-          echo "MATCH_GIT_URL length = ${#MATCH_GIT_URL}"
-          echo "MATCH_GIT_URL (first 4 chars) = ${MATCH_GIT_URL:0:4}"
-        env:
-          MATCH_GIT_URL: ${{ secrets.REPO_PAT }}
-
       # ──────────────────────────────────────────────────────────────────────────────
       # 4) Bundler 및 Gem 의존성 설치
       - name: Install dependencies
