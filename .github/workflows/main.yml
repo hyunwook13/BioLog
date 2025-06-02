@@ -8,19 +8,57 @@ on:
 jobs:
   release:
     name: Custom Release
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      # 1) CI 플랫폼용 lockfile 업데이트 (bundle install 전에 반드시 수행)
+      - name: Add CI platform support
+        run: bundle lock --add-platform arm64-darwin-23
+
+      # 2) Ruby 설치 (bundler-cache 제거, bundle install을 수동으로 호출)
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7
+          ruby-version: '3.3'
+          # bundler-cache: true  ← 제거
+
+      # 3) 의존성 설치
       - name: Install dependencies
         run: |
           gem install bundler
           bundle install
+      - name: Generate Fastlane API Key files
+        run: |
+          echo "${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}" | base64 -d > fastlane/AuthKey.p8
+          echo '{
+            "key_id": "'"${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}"'",
+            "issuer_id": "'"${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}"'",
+            "key_filepath": "fastlane/AuthKey.p8"
+          }' > fastlane/api_key.json
+      # 예시: ssh 키 설치 단계 (match가 git@…주소에 접근 가능하도록)
+      - name: Setup SSH for Match
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.MATCH_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+      # 4) fastlane 실행
       - name: Run fastlane custom_release
         run: bundle exec fastlane custom_release
         env:
+          MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
+
+          # -----------------------------------------------
+          # 아래 세 개는 Fastlane API Key 관련 Secret
+          # -----------------------------------------------
+          FASTLANE_APPLE_API_KEY_KEY_ID:     ${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}
+          FASTLANE_APPLE_API_KEY_ISSUER_ID:  ${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}
+          FASTLANE_APPLE_API_KEY_CONTENT:    ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
+
+          # match & fastlane 배포 시 사용하는 패스워드 (선택)
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+
+          # (필요하다면) GitHub 이메일/사용자 정보
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
