@@ -1,16 +1,28 @@
-git_url("git@github.com:hyunwook13/BioLog.git")
+# fastlane/Matchfile
+
+# 1) 레포 URL (HTTPS로 변경)
+git_url("https://github.com/hyunwook13/match_repo.git")
+
+# 2) 브랜치
 git_branch("master")
 
+# 3) 저장 방식
 storage_mode("git")
 
+# 4) Apple Developer 팀
 team_id("D49753ZB3N")
 
-type("appstore") # The default type, can be: appstore, adhoc, enterprise or development
+# 5) 배포 타입
+type("appstore")
 
+# 6) 앱 번들 ID
 app_identifier(["com.Wook.BioLog"])
-username("hjhsht@icloud.com") # Your Apple Developer Portal username
 
-# For all available options run `fastlane match --help`
-# Remove the # in the beginning of the line to enable the other options
+# 7) Apple ID (Developer Portal 로그인 아이디)
+username("hjhsht@icloud.com")
 
-# The docs are available on https://docs.fastlane.tools/actions/match
+# 8) 전체 히스토리 대신 '최신 커밋 1개'만 내려받음
+shallow_clone(true)
+
+# 9) 브랜치를 바로 복제 (속도 향상에 도움)
+clone_branch_directly(true)

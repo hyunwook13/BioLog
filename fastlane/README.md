@@ -21,15 +21,7 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 [bundle exec] fastlane ios custom_release
 ```
 
-커스텀 릴리즈
-
-### ios release
-
-```sh
-[bundle exec] fastlane ios release
-```
-
-빌드→아카이브→내보내기→TestFlight 업로드
+코코아팟 설치 → 테스트 → match → 빌드 및 TestFlight 업로드
 
 ----
 

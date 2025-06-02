@@ -25,7 +25,7 @@ final class PreViewViewModelTests: XCTestCase {
         )
         mockUseCase = MockBookUseCaseImpl()
             
-        sut = PreviewViewModel(book: completeBook, usecase: mockUseCase)
+        sut = PreviewViewModel(book: completeBook, bookUseCase: mockUseCase)
     }
     
     func test() {
