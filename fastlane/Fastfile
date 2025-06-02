@@ -23,7 +23,8 @@ platform :ios do
     match(
       type: "appstore",
       readonly: true,
-      clone_branch_directly: true
+      git_url: "git@github.com:hyunwook13/match_repo.git"
+      #clone_branch_directly: true
     )
 
     # 4. 빌드 및 업로드
