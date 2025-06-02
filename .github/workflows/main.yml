@@ -1,4 +1,5 @@
 name: CI Pipeline
+
 on:
   push:
     branches:
@@ -6,7 +7,7 @@ on:
 
 jobs:
   build-and-release:
-    runs-on: macos-15
+    runs-on: macos-latest
 
     steps:
       - name: Checkout Repo
@@ -14,37 +15,43 @@ jobs:
         with:
           persist-credentials: false
 
+      # 1) CI 플랫폼용 lockfile 업데이트 (필요 시, Apple Silicon 지원)
       - name: Add CI platform support
         run: bundle lock --add-platform arm64-darwin-23
 
+      # 2) Ruby 및 의존성 설치
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
+
+      # 3) SSH 키 설정 (match_repo 접근용)
+      - name: Setup SSH access to GitHub
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.MATCH_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
 
       - name: Install dependencies
         run: |
           gem install bundler
           bundle install
 
-      # ───────────────────────────────────────────────────────────────────
-      # 3) 워크플로우에서 먼저 Match Repo를 토큰으로 HTTPS 클론
-      - name: Manual Clone Match Repo
+      # 4) Fastlane Apple API Key 파일 생성
+      - name: Generate Fastlane API Key files
         run: |
-          echo "→ 시도할 URL = https://hyunwook13:${{ secrets.REPO_PAT }}@github.com/hyunwook13/match_repo.git"
-          git clone "https://hyunwook13:${{ secrets.REPO_PAT }}@github.com/hyunwook13/match_repo.git" ./_tmp_match_repo
-          ls -la ./_tmp_match_repo
+          echo "${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}" | base64 -d > fastlane/AuthKey.p8
+          echo '{
+            "key_id": "'"${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}"'",
+            "issuer_id": "'"${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}"'",
+            "key_filepath": "fastlane/AuthKey.p8"
+          }' > fastlane/api_key.json
 
-      # ───────────────────────────────────────────────────────────────────
-      # 4) Fastlane 실행: --env LOCAL_MATCH_REPO="file://..." 로 로컬 클론 경로를 넘겨준다
+      # 5) Fastlane 실행
       - name: Run fastlane custom_release
-        run: |
-          bundle exec fastlane ios custom_release
+        run: bundle exec fastlane ios custom_release
         env:
-          LOCAL_MATCH_REPO: "file://$(pwd)/_tmp_match_repo"
-          FASTLANE_APPLE_API_KEY_KEY_ID:    ${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}
-          FASTLANE_APPLE_API_KEY_ISSUER_ID: ${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}
-          FASTLANE_APPLE_API_KEY_CONTENT:   ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
-          FASTLANE_USER:     ${{ secrets.FASTLANE_USER }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
+          FASTLANE_USER:             ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD:         ${{ secrets.FASTLANE_PASSWORD }}
+          MATCH_KEYCHAIN_PASSWORD:   ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
