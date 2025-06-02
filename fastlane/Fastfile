@@ -20,12 +20,13 @@ platform :ios do
 
 
     # 3. 인증서 및 프로비저닝 프로파일 설치
-    match(
-      type: "appstore",
-      readonly: true,
-      git_url: "git@github.com:hyunwook13/match_repo.git"
-      #clone_branch_directly: true
-    )
+    match
+#(
+ #     type: "appstore",
+  #    readonly: true,
+   #   git_url: "git@github.com:hyunwook13/match_repo.git"
+   #   #clone_branch_directly: true
+   # )
 
     # 4. 빌드 및 업로드
     build_app(
