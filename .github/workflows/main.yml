@@ -37,21 +37,13 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      # 4) Fastlane Apple API Key 파일 생성
-      - name: Generate Fastlane API Key files
-        run: |
-          echo "${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}" | base64 -d > fastlane/AuthKey.p8
-          echo '{
-            "key_id": "'"${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}"'",
-            "issuer_id": "'"${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}"'",
-            "key_filepath": "fastlane/AuthKey.p8"
-          }' > fastlane/api_key.json
-
       # 5) Fastlane 실행
       - name: Run fastlane custom_release
         run: bundle exec fastlane ios custom_release
         env:
-          FASTLANE_USER:             ${{ secrets.FASTLANE_USER }}
-          FASTLANE_PASSWORD:         ${{ secrets.FASTLANE_PASSWORD }}
-          MATCH_KEYCHAIN_PASSWORD:   ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
-          MATCH_PASSWORD:            ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_APPLE_API_KEY_KEY_ID:       ${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}
+          FASTLANE_APPLE_API_KEY_CONTENT:      ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
+          FASTLANE_APPLE_API_KEY_ISSUER_ID:    ${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}
+          FASTLANE_USER:                       ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD:                   ${{ secrets.FASTLANE_PASSWORD }}
+          MATCH_KEYCHAIN_PASSWORD:             ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
