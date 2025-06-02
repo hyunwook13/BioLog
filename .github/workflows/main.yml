@@ -10,7 +10,7 @@ on:
 jobs:
   release:
     name: Custom Release
-    runs-on: macos-15
+    runs-on: macos-latest
 
     steps:
       # ──────────────────────────────────────────────────────────────────────────────
@@ -29,6 +29,13 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
+
+      - name: Debug MATCH_GIT_URL
+        run: |
+          echo "MATCH_GIT_URL length = ${#MATCH_GIT_URL}"
+          echo "MATCH_GIT_URL (first 4 chars) = ${MATCH_GIT_URL:0:4}"
+        env:
+          MATCH_GIT_URL: ${{ secrets.REPO_PAT }}
 
       # ──────────────────────────────────────────────────────────────────────────────
       # 4) Bundler 및 Gem 의존성 설치
