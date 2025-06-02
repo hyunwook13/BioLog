@@ -1,7 +1,7 @@
 # fastlane/Matchfile
 
 # 1) 레포 URL (HTTPS로 변경)
-git_url("https://github.com/hyunwook13/match_repo.git")
+git_url("https://${MATCH_GIT_URL}@github.com/hyunwook13/match_repo.git")
 
 # 2) 브랜치
 git_branch("master")
@@ -24,5 +24,4 @@ username("hjhsht@icloud.com")
 # 8) 전체 히스토리 대신 '최신 커밋 1개'만 내려받음
 shallow_clone(true)
 
-# 9) 브랜치를 바로 복제 (속도 향상에 도움)
-clone_branch_directly(true)
+readonly(true)
