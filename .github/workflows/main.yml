@@ -1,78 +1,51 @@
-# .github/workflows/ci.yml
-
 name: CI Pipeline
-
 on:
   push:
     branches:
       - main
 
 jobs:
-  release:
-    name: Custom Release
-    runs-on: macos-latest
+  build-and-release:
+    runs-on: macos-15
 
     steps:
-      # ──────────────────────────────────────────────────────────────────────────────
-      # 1) 소스코드 checkout
-      - name: actions/checkout
+      - name: Checkout Repo
         uses: actions/checkout@v4
         with:
           persist-credentials: false
 
-      # ──────────────────────────────────────────────────────────────────────────────
-      # 2) CI 플랫폼용 lockfile 업데이트 (필요 시, Apple Silicon 지원)
       - name: Add CI platform support
         run: bundle lock --add-platform arm64-darwin-23
 
-      - name: Manual Clone Test
-        run: |
-          echo "→ 실제 시도할 URL(마스킹 전) = https://hyunwook13:${MATCH_GIT_URL}@github.com/hyunwook13/match_repo.git"
-          git clone "https://hyunwook13:${MATCH_GIT_URL}@github.com/hyunwook13/match_repo.git" ./_tmp_match_repo || true
-          ls -la ./_tmp_match_repo
-        env:
-          MATCH_GIT_URL: ${{ secrets.REPO_PAT }}
-
-      # ──────────────────────────────────────────────────────────────────────────────
-      # 3) Ruby 설치
-      - name: Set up Ruby
+      - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
-      # ──────────────────────────────────────────────────────────────────────────────
-      # 4) Bundler 및 Gem 의존성 설치
+
       - name: Install dependencies
         run: |
           gem install bundler
           bundle install
 
-      # ──────────────────────────────────────────────────────────────────────────────
-      # 5) Fastlane Apple API Key 파일 생성
-      - name: Generate Fastlane API Key files
+      # ───────────────────────────────────────────────────────────────────
+      # 3) 워크플로우에서 먼저 Match Repo를 토큰으로 HTTPS 클론
+      - name: Manual Clone Match Repo
         run: |
-          echo "${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}" | base64 -d > fastlane/AuthKey.p8
-          echo '{
-            "key_id": "'"${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}"'",
-            "issuer_id": "'"${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}"'",
-            "key_filepath": "fastlane/AuthKey.p8"
-          }' > fastlane/api_key.json
+          echo "→ 시도할 URL = https://hyunwook13:${{ secrets.REPO_PAT }}@github.com/hyunwook13/match_repo.git"
+          git clone "https://hyunwook13:${{ secrets.REPO_PAT }}@github.com/hyunwook13/match_repo.git" ./_tmp_match_repo
+          ls -la ./_tmp_match_repo
 
-      # ──────────────────────────────────────────────────────────────────────────────
-      # 6) Fastlane 실행 (HTTPS+PAT 방식)
+      # ───────────────────────────────────────────────────────────────────
+      # 4) Fastlane 실행: --env LOCAL_MATCH_REPO="file://..." 로 로컬 클론 경로를 넘겨준다
       - name: Run fastlane custom_release
-        run: bundle exec fastlane ios custom_release
+        run: |
+          # 현재 워킹 디렉토리가 리포 루트(코드 + fastlane 디렉토리)라고 가정
+          bundle exec fastlane ios custom_release \
+            --env LOCAL_MATCH_REPO="file://$(pwd)/_tmp_match_repo"
         env:
-          # ── match가 사용하는 Git 저장소 접근용 Token
-          MATCH_GIT_URL: ${{ secrets.REPO_PAT }}
-
-          # ── Fastlane Apple API Key 관련 (optional)
-          FASTLANE_APPLE_API_KEY_KEY_ID:     ${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}
-          FASTLANE_APPLE_API_KEY_ISSUER_ID:  ${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}
-          FASTLANE_APPLE_API_KEY_CONTENT:    ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
-
-          # ── Apple ID 로그인 정보 (optional)
+          FASTLANE_APPLE_API_KEY_KEY_ID:    ${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}
+          FASTLANE_APPLE_API_KEY_ISSUER_ID: ${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}
+          FASTLANE_APPLE_API_KEY_CONTENT:   ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
           FASTLANE_USER:     ${{ secrets.FASTLANE_USER }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-
-          # ── match가 키체인에 쓰는 비밀번호 (optional)
           MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
