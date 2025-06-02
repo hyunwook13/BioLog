@@ -20,7 +20,7 @@ final class BookMigrationPolicy: NSEntityMigrationPolicy {
             return
         }
 
-        if let bookmarked = sourceInstance.value(forKey: "bookmark") as? NSManagedObject {
+        if let bookmarked = sourceInstance.value(forKey: "BookInfo") as? NSManagedObject {
             let isAdded = bookmarked.value(forKey: "addedDate") as? Date ?? Date()
             book.setValue(isAdded, forKey: "addedDate")
         }

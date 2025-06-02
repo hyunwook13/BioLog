@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23507" systemVersion="24D81" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788" systemVersion="24E263" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="Book" representedClassName="Book" syncable="YES" codeGenerationType="class">
         <attribute name="author" optional="YES" attributeType="String"/>
         <attribute name="book_description" optional="YES" attributeType="String"/>
@@ -43,10 +43,4 @@
         <attribute name="uuid" optional="YES" attributeType="String"/>
         <relationship name="character" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BookCharacter" inverseName="note" inverseEntity="BookCharacter"/>
     </entity>
-    <entity name="ReadingHistory" representedClassName="ReadingHistory" syncable="YES" codeGenerationType="class">
-        <attribute name="current_page" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="finish_date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="start_date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-    </entity>
-    <entity name="Review" representedClassName="Review" syncable="YES" codeGenerationType="class"/>
 </model>

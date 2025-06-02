@@ -35,6 +35,24 @@ final class NoteCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("Cell의 Touch 시작")
+        super.touchesBegan(touches, with: event)
+        
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("Cell의 Touch 끝")
+        super.touchesEnded(touches, with: event)
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("Cell의 Touch 취소됨")
+        super.touchesCancelled(touches, with: event)
+    }
+    
+    
+    
     private func setupUI() {
         contentView.addSubview(noteLabel)
         contentView.addSubview(pageLabel)

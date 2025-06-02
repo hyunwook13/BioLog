@@ -99,7 +99,7 @@ extension Book {
             publisher: self.publisher!,
             customerReviewRank: self.customerReviewRank,
             createdAt: self.createdAt ?? Date(),
-            isBookmarked: self.isBookmarked,
+            isBookmarked: true,
             category: self.category?.toDTO() ?? .empty,
             characters: characters?.compactMap { $0.toDTO() } ?? [],
             originalObject: self

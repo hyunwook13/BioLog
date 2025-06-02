@@ -10,7 +10,6 @@
         <attribute name="customerReviewRank" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="isbn" optional="YES" attributeType="String"/>
-        <attribute name="isBookmarked" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="pubDate" optional="YES" attributeType="String"/>
         <attribute name="publisher" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
@@ -39,10 +38,5 @@
         <attribute name="page" optional="YES" attributeType="String"/>
         <attribute name="uuid" optional="YES" attributeType="String"/>
         <relationship name="character" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BookCharacter" inverseName="note" inverseEntity="BookCharacter"/>
-    </entity>
-    <entity name="ReadingHistory" representedClassName="ReadingHistory" syncable="YES" codeGenerationType="class">
-        <attribute name="current_page" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="finish_date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="start_date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
 </model>

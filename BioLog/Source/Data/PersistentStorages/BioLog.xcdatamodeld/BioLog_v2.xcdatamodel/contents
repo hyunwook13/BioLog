@@ -5,14 +5,12 @@
         <attribute name="book_description" optional="YES" attributeType="String"/>
         <attribute name="categoryName" optional="YES" attributeType="String"/>
         <attribute name="cover" optional="YES" attributeType="String"/>
-        <attribute name="customerReviewRank" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="isbn" optional="YES" attributeType="String"/>
-        <attribute name="isBookmarked" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="pubDate" optional="YES" attributeType="String"/>
         <attribute name="publisher" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
-        <relationship name="bookmark" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Bookmark" inverseName="book" inverseEntity="Bookmark"/>
+        <relationship name="bookmark" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BookInfo" inverseName="book" inverseEntity="BookInfo"/>
         <relationship name="categories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Category" inverseName="books" inverseEntity="Category"/>
         <relationship name="characters" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="BookCharacter" inverseName="book" inverseEntity="BookCharacter"/>
         <relationship name="notes" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Note" inverseName="book" inverseEntity="Note"/>
@@ -27,7 +25,7 @@
         <relationship name="book" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Book" inverseName="characters" inverseEntity="Book"/>
         <relationship name="note" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Note" inverseName="character" inverseEntity="Note"/>
     </entity>
-    <entity name="Bookmark" representedClassName="Bookmark" syncable="YES" codeGenerationType="class">
+    <entity name="BookInfo" representedClassName="BookInfo" syncable="YES" codeGenerationType="class">
         <attribute name="dateAdded" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <relationship name="book" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Book" inverseName="bookmark" inverseEntity="Book"/>
@@ -44,10 +42,4 @@
         <relationship name="book" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Book" inverseName="notes" inverseEntity="Book"/>
         <relationship name="character" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BookCharacter" inverseName="note" inverseEntity="BookCharacter"/>
     </entity>
-    <entity name="ReadingHistory" representedClassName="ReadingHistory" syncable="YES" codeGenerationType="class">
-        <attribute name="current_page" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="finish_date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="start_date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-    </entity>
-    <entity name="Review" representedClassName="Review" syncable="YES" codeGenerationType="class"/>
 </model>

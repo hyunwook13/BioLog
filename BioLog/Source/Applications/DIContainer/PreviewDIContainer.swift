@@ -23,7 +23,7 @@ final class PreviewDIContainer {
     }
     
     func makePreviewViewModel() -> PreviewViewModel {
-        return PreviewViewModel(book: book, usecase: bookUseCase)
+        return PreviewViewModel(book: book, bookUseCase: bookUseCase)
     }
     
     func makePreviewViewController() -> PreviewViewController {

@@ -19,7 +19,7 @@ final class EditCharacterViewController: UIViewController {
     //    private var notes = [NoteDTO]()
     
     // MARK: - UI Components
-    private let scrollView = UIScrollView()
+    private let scrollView = LoggingScrollView()
     private let containerView = UIView()
     
     private let profileImageView = UIButton()
@@ -38,7 +38,7 @@ final class EditCharacterViewController: UIViewController {
     private let notesLabel = UILabel()
     
     private lazy var notesTableView: UITableView = {
-        let tableView = UITableView()
+        let tableView = LoggingTableView()
         tableView.register(NoteCell.self, forCellReuseIdentifier: NoteCell.identifier)
         tableView.backgroundColor = .systemBackground
         tableView.layer.cornerRadius = 8
@@ -93,7 +93,10 @@ final class EditCharacterViewController: UIViewController {
         bind()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        tapGesture.cancelsTouchesInView = false
+        
+//        tapGesture.cancelsTouchesInView = false
+        
+        
         view.addGestureRecognizer(tapGesture)
         
     }
@@ -273,4 +276,65 @@ final class EditCharacterViewController: UIViewController {
     }
 }
 
-extension EditCharacterViewController: UITableViewDelegate {}
+extension EditCharacterViewController: UITableViewDelegate {
+    
+    
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        <#code#>
+//    }
+}
+// MARK: - ScrollView 로그용
+final class LoggingScrollView: UIScrollView {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("🟦 ScrollView: touchesBegan")
+        super.touchesBegan(touches, with: event)
+    }
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("🟦 ScrollView: touchesMoved")
+        super.touchesMoved(touches, with: event)
+    }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("🟦 ScrollView: touchesEnded")
+        super.touchesEnded(touches, with: event)
+    }
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("🟦 ScrollView: touchesCancelled")
+        super.touchesCancelled(touches, with: event)
+    }
+}
+
+
+// MARK: - TableView 로그용
+final class LoggingTableView: UITableView, UITableViewDataSource {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("🟥 TableView: touchesBegan")
+        super.touchesBegan(touches, with: event)
+    }
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("🟥 TableView: touchesMoved")
+        super.touchesMoved(touches, with: event)
+    }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("🟥 TableView: touchesEnded")
+        super.touchesEnded(touches, with: event)
+    }
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("🟥 TableView: touchesCancelled")
+        super.touchesCancelled(touches, with: event)
+    }
+}
+
+     
+extension LoggingTableView {
+    // MARK: - UITableViewDataSource
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 20
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let id = "Cell"
+        let cell = tableView.dequeueReusableCell(withIdentifier: id) ?? UITableViewCell(style: .default, reuseIdentifier: id)
+        cell.textLabel?.text = "Row \(indexPath.row)"
+        return cell
+    }
+}
