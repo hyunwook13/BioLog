@@ -1,5 +1,4 @@
 name: CI Pipeline
-
 on:
   push:
     branches:
@@ -7,7 +6,7 @@ on:
 
 jobs:
   build-and-release:
-    runs-on: macos-latest
+    runs-on: macos-15
 
     steps:
       - name: Checkout Repo
@@ -25,6 +24,11 @@ jobs:
         with:
           ruby-version: '3.3'
 
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle install
+
       # 3) SSH 키 설정 (match_repo 접근용)
       - name: Setup SSH access to GitHub
         run: |
@@ -32,11 +36,6 @@ jobs:
           echo "${{ secrets.MATCH_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-      - name: Install dependencies
-        run: |
-          gem install bundler
-          bundle install
 
       # 4) Fastlane Apple API Key 파일 생성
       - name: Generate Fastlane API Key files
