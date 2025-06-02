@@ -39,10 +39,9 @@ jobs:
       # 4) Fastlane 실행: --env LOCAL_MATCH_REPO="file://..." 로 로컬 클론 경로를 넘겨준다
       - name: Run fastlane custom_release
         run: |
-          # 현재 워킹 디렉토리가 리포 루트(코드 + fastlane 디렉토리)라고 가정
-          bundle exec fastlane ios custom_release \
-            --env LOCAL_MATCH_REPO="file://$(pwd)/_tmp_match_repo"
+          bundle exec fastlane ios custom_release
         env:
+          LOCAL_MATCH_REPO: "file://$(pwd)/_tmp_match_repo"
           FASTLANE_APPLE_API_KEY_KEY_ID:    ${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}
           FASTLANE_APPLE_API_KEY_ISSUER_ID: ${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}
           FASTLANE_APPLE_API_KEY_CONTENT:   ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
