@@ -1,14 +1,7 @@
 # fastlane/Matchfile
 
-# 1) 레포 URL (HTTPS로 변경)
-if ENV["LOCAL_MATCH_REPO"] && !ENV["LOCAL_MATCH_REPO"].empty?
-  # CI에서 --env LOCAL_MATCH_REPO="file:///.../_tmp_match_repo" 로 넘겨줄 때
-  git_url(ENV["LOCAL_MATCH_REPO"])
-else
-  # 로컬 개발환경이나, CI에서 LOCAL_MATCH_REPO를 지정하지 않은 경우
-  # 일반적인 원격 HTTPS URL 또는 SSH URL을 여기서 지정
-  git_url("https://hyunwook13:#{ENV['REPO_PAT']}@github.com/hyunwook13/match_repo.git")
-end
+
+git_url("git@github.com:hyunwook13/match_repo.git")
 
 # 2) 브랜치
 git_branch("master")
