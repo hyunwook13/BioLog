@@ -45,6 +45,8 @@ platform :ios do
 
     pilot(
       api_key: api_key,
+      skip_waiting_for_build_processing: true,
+      wait_processing_timeout_duration: 120,
       ipa: "./BioLog.ipa"
     )
   end
