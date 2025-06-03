@@ -28,6 +28,19 @@ platform :ios do
    #   #clone_branch_directly: true
    # )
 
+  # 2) 키체인 언락 (CI 환경이면 꼭 필요)
+  sh("security unlock-keychain -p \"#{ENV['MATCH_KEYCHAIN_PASSWORD']}\" ~/Library/Keychains/login.keychain-db")
+  sh("security find-identity -v -p codesigning")
+
+  # 3) App Store 서명 → IPA 생성
+  build_app(
+    project:          "BioLog.xcodeproj",
+    scheme:           "BioLog",
+    export_method:    "app-store",
+    output_directory: "build",
+    output_name:      "BioLog.ipa"
+  )
+
     # 4. 빌드 및 업로드
     build_app(
       project: "BioLog.xcodeproj", 
@@ -36,7 +49,10 @@ platform :ios do
       silent: true,
       #export_method: app-store,
       skip_package_pkg: true,
-      verbose: true
+      verbose: true,
+    export_method:    "app-store",
+    output_directory: "build",
+    output_name:      "BioLog.ipa"
     )
 
     api_key = app_store_connect_api_key(
@@ -51,7 +67,7 @@ platform :ios do
       api_key: api_key,
       skip_waiting_for_build_processing: true,
       wait_processing_timeout_duration: 120,
-      ipa: "./BioLog.ipa"
+      ipa: "build/BioLog.ipa"
     )
   end
 end
