@@ -30,7 +30,7 @@ platform :ios do
 
     # 4. 빌드 및 업로드
     build_app(
-      project: "BioLog",
+      project: "BioLog.xcodeproj", 
       scheme: "BioLog",
       clean: true,
       silent: true,
