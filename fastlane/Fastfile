@@ -29,8 +29,40 @@ platform :ios do
    # )
 
   # 2) 키체인 언락 (CI 환경이면 꼭 필요)
-  sh("security unlock-keychain -p \"#{ENV['MATCH_KEYCHAIN_PASSWORD']}\" ~/Library/Keychains/login.keychain-db")
-  sh("security find-identity -v -p codesigning")
+     keychain_password = ENV["MATCH_KEYCHAIN_PASSWORD"]
+
+    # 2-1. 로그인 키체인 언락 시도
+    UI.header("🔓 Unlocking login.keychain-db…")
+    begin
+      unlock_output = sh("security unlock-keychain -p \"#{keychain_password}\" ~/Library/Keychains/login.keychain-db")
+      UI.success("✅ Keychain unlocked successfully")
+    rescue => ex
+      UI.error("❌ Failed to unlock keychain: #{ex.message}")
+      # 필요하다면 여기서 lane을 종료하거나, 에러 처리를 추가
+      raise
+    end
+
+    # 2-2. 인증서 목록 조회해서 출력
+    UI.header("🔍 Fetching code signing identities…")
+    begin
+      identities = sh("security find-identity -v -p codesigning")
+      UI.message("🔑 Available code signing identities:\n#{identities}")
+    rescue => ex
+      UI.error("⚠️ No code signing identities found or error: #{ex.message}")
+      # 프로필/인증서가 제대로 설치되지 않은 경우 여기서 에러를 던져 중단할 수 있습니다
+      raise
+    end
+
+    # 2-3. 개인 키에 codesign 권한 강제 부여
+    UI.header("🔐 Setting key partition list for codesign…")
+    begin
+      sh("security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k \"#{keychain_password}\" ~/Library/Keychains/login.keychain-db")
+      UI.success("✅ Key partition list set successfully")
+    rescue => ex
+      UI.error("❌ Failed to set key partition list: #{ex.message}")
+      # 이 단계가 실패하면 나중에 Signing 단계에서 멈출 수 있으니, 상황에 따라 처리
+      # raise
+    end
 
   # 3) App Store 서명 → IPA 생성
   #build_app(
