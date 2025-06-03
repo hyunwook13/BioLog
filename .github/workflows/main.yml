@@ -19,15 +19,16 @@ jobs:
         run: bundle lock --add-platform arm64-darwin-23
 
       # 2) Ruby 및 의존성 설치
-      - name: Setup Ruby
+      - name: Setup Ruby and Cache Bundler
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
+          cache: bundler
 
-      - name: Install dependencies
+      - name: Install Ruby Gems
         run: |
           gem install bundler
-          bundle install
+          bundle install --jobs 4 --retry 3
 
       # 3) SSH 키 설정 (match_repo 접근용)
       - name: Setup SSH access to GitHub
@@ -36,6 +37,14 @@ jobs:
           echo "${{ secrets.MATCH_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Cache Xcode DerivedData
+        uses: actions/cache@v3
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-deriveddata-${{ hashFiles('**/Podfile.lock','**/*.xcodeproj/project.pbxproj') }}
+          restore-keys: |
+            ${{ runner.os }}-deriveddata-
 
       # 5) Fastlane 실행
       - name: Run fastlane custom_release
