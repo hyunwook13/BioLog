@@ -35,7 +35,8 @@ platform :ios do
       clean: true,
       silent: true,
       #export_method: app-store,
-      skip_package_pkg: true
+      skip_package_pkg: true,
+      verbose: true
     )
 
     api_key = app_store_connect_api_key(
