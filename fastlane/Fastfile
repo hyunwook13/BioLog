@@ -34,7 +34,7 @@ platform :ios do
       scheme: "BioLog",
       clean: true,
       silent: true,
-      export_method: app-store,
+      #export_method: app-store,
       skip_package_pkg: true
     )
 
