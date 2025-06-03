@@ -48,7 +48,7 @@ jobs:
 
       # 5) Fastlane 실행
       - name: Run fastlane custom_release
-        run: bundle exec fastlane ios custom_release
+        run: bundle exec fastlane ios custom_release --verbose
         env:
           FASTLANE_APPLE_API_KEY_KEY_ID:       ${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}
           FASTLANE_APPLE_API_KEY_CONTENT:      ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
