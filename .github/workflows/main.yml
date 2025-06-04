@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      
+
 jobs:
   build-and-release:
     runs-on: macos-15
@@ -15,10 +15,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Add CI platform support
+      - name: Install Fastlane
         run: gem install fastlane --no-document
 
-      - name: Setup SSH access to GitHub
+      - name: Setup SSH for match repo
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.MATCH_SSH_KEY }}" > ~/.ssh/id_ed25519
@@ -33,16 +33,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-deriveddata-
 
-      - name: Run fastlane custom_release
+      - name: Run Fastlane custom_release
         run: fastlane ios custom_release --verbose
         env:
-          MATCH_KEYCHAIN_PASSWORD:             ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
           MATCH_PASSWORD:                      ${{ secrets.MATCH_PASSWORD }}
-
-      - name: Run fastlane release_only
-        run: fastlane ios release_only --verbose
-        env:
+          MATCH_KEYCHAIN_PASSWORD:             ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
           FASTLANE_APPLE_API_KEY_KEY_ID:       ${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}
           FASTLANE_APPLE_API_KEY_CONTENT:      ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
           FASTLANE_APPLE_API_KEY_ISSUER_ID:    ${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}
-          MATCH_KEYCHAIN_PASSWORD:             ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
