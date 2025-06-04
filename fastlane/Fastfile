@@ -1,9 +1,10 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "코코아팟 설치 → 테스트 → match → 키체인 셋업"
+  desc "코코아팟 설치 → 테스트 → 인증서 설치 → 빌드 및 TestFlight 업로드"
   lane :custom_release do
-    # 2. 테스트 (실패해도 진행)
+
+    # ✅ 테스트 실행 (실패해도 계속 진행)
     scan(
       scheme: "BioLogTests",
       project: "BioLog.xcodeproj",
@@ -15,64 +16,13 @@ platform :ios do
       build_for_testing: true
     )
 
+    # ✅ CI 설정
     setup_ci
-    # 3. 인증서 및 프로비저닝 프로파일 설치
+
+    # ✅ 인증서 및 프로비저닝 프로파일 설치
     match
 
-    keychain_password = ENV["MATCH_KEYCHAIN_PASSWORD"]
-
-    UI.header("🔓 Unlocking login.keychain-db…")
-    begin
-      unlock_output = sh("security unlock-keychain -p '#{keychain_password}' ~/Library/Keychains/login.keychain-db")
-      UI.success("✅ Keychain unlocked successfully")
-    rescue => ex
-      UI.error("❌ Failed to unlock keychain: #{ex.message}")
-      raise
-    end
-
-    UI.header("🔍 Fetching code signing identities…")
-    begin
-      identities = sh("security find-identity -v -p codesigning")
-      UI.message("🔑 Available code signing identities:\n#{identities}")
-    rescue => ex
-      UI.error("⚠️ No code signing identities found or error: #{ex.message}")
-      raise
-    end
-
-    UI.header("🔐 Setting key partition list for codesign…")
-    begin
-      sh("security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k '#{keychain_password}' ~/Library/Keychains/login.keychain-db")
-      UI.success("✅ Key partition list set successfully")
-    rescue => ex
-      UI.error("❌ Failed to set key partition list: #{ex.message}")
-    end
-  end
-
-  desc "빌드 및 TestFlight 업로드만 진행"
-  lane :release_only do
- #   build_app(
- #     project: "BioLog.xcodeproj", 
- #     scheme: "BioLog",
- #     clean: true,
- #     silent: true,
- #    skip_package_pkg: true,
- #     export_method: "app-store",
- #     output_directory: "build",
- #     output_name: "BioLog.ipa",
- #     skip_codesigning: true
-
-     # include_bitcode: false,
-     # export_options: {
-     #   signingStyle: "manual",
-     #   uploadBitcode: false,
-     #   uploadSymbols: true,
-     #   compileBitcode: false,
-     #   provisioningProfiles: { 
-     #     "com.Wook.BioLog" => "match AppStore com.Wook.BioLog"
-     #   }
-    #  }
-#    )
-
+    # ✅ App Store Connect API 키 설정
     api_key = app_store_connect_api_key(
       key_id: ENV["FASTLANE_APPLE_API_KEY_KEY_ID"],
       issuer_id: ENV["FASTLANE_APPLE_API_KEY_ISSUER_ID"],
@@ -81,40 +31,42 @@ platform :ios do
     )
     UI.message("🔑 api_key: #{api_key.inspect}")
 
-latest_number = latest_testflight_build_number(app_identifier: "com.Wook.BioLog") || 0
-new_build_number = latest_number + 1
+    # ✅ 빌드 번호 증가
+    latest_number    = latest_testflight_build_number(app_identifier: "com.Wook.BioLog") || 0
+    new_build_number = latest_number + 1
 
-increment_build_number(
-  xcodeproj: "BioLog.xcodeproj", 
-  build_number: new_build_number
-)
+    increment_build_number(
+      xcodeproj: "BioLog.xcodeproj",
+      build_number: new_build_number
+    )
 
-build_app(
-  project: "BioLog.xcodeproj", 
-  scheme: "BioLog",
-  # clean: true,
-  silent: true,
-  skip_package_pkg: true,
-  export_method: "app-store",
-  output_directory: "build",
-  output_name: "BioLog.ipa",
-  export_options: {
-    signingStyle: "manual",
-    provisioningProfiles: {
-      "com.Wook.BioLog" => "match AppStore com.Wook.BioLog"
-    },
-    teamID: "D49753ZB3N", # 명시적으로 지정
-    compileBitcode: false,
-    uploadSymbols: true,
-    uploadBitcode: false
-  },
-  export_xcargs: [
-    "CODE_SIGN_IDENTITY='Apple Distribution: Hyun Wook Lee (D49753ZB3N)'",
-    "DEVELOPMENT_TEAM=D49753ZB3N",
-    "PROVISIONING_PROFILE_SPECIFIER='match AppStore com.Wook.BioLog'"
-  ].join(" ")
-)
+    # ✅ 앱 빌드
+    build_app(
+      project: "BioLog.xcodeproj",
+      scheme: "BioLog",
+      silent: true,
+      skip_package_pkg: true,
+      export_method: "app-store",
+      output_directory: "build",
+      output_name: "BioLog.ipa",
+      export_options: {
+        signingStyle: "manual",
+        provisioningProfiles: {
+          "com.Wook.BioLog" => "match AppStore com.Wook.BioLog"
+        },
+        teamID: "D49753ZB3N",
+        compileBitcode: false,
+        uploadSymbols: true,
+        uploadBitcode: false
+      },
+      export_xcargs: [
+        "CODE_SIGN_IDENTITY='Apple Distribution: Hyun Wook Lee (D49753ZB3N)'",
+        "DEVELOPMENT_TEAM=D49753ZB3N",
+        "PROVISIONING_PROFILE_SPECIFIER='match AppStore com.Wook.BioLog'"
+      ].join(" ")
+    )
 
+    # ✅ TestFlight 업로드
     pilot(
       api_key: api_key,
       skip_waiting_for_build_processing: true,
