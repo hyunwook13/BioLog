@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-
+      
 jobs:
   build-and-release:
     runs-on: macos-15
@@ -16,18 +16,7 @@ jobs:
           persist-credentials: false
 
       - name: Add CI platform support
-        run: bundle lock --add-platform arm64-darwin-23
-
-      - name: Setup Ruby and Cache Bundler
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.3'
-          cache: bundler
-
-      - name: Install Ruby Gems
-        run: |
-          gem install bundler
-          bundle install --jobs 4 --retry 3
+        run: gem install fastlane --no-document
 
       - name: Setup SSH access to GitHub
         run: |
@@ -45,13 +34,13 @@ jobs:
             ${{ runner.os }}-deriveddata-
 
       - name: Run fastlane custom_release
-        run: bundle exec fastlane ios custom_release --verbose
+        run: fastlane ios custom_release --verbose
         env:
           MATCH_KEYCHAIN_PASSWORD:             ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
           MATCH_PASSWORD:                      ${{ secrets.MATCH_PASSWORD }}
 
       - name: Run fastlane release_only
-        run: bundle exec fastlane ios release_only --verbose
+        run: fastlane ios release_only --verbose
         env:
           FASTLANE_APPLE_API_KEY_KEY_ID:       ${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}
           FASTLANE_APPLE_API_KEY_CONTENT:      ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
