@@ -61,15 +61,6 @@ platform :ios do
       # 필요에 따라 raise 해도 되고, 서명 단계에서 다시 확인 가능
     end
 
-  # 3) App Store 서명 → IPA 생성
-  #build_app(
-  #  project:          "BioLog.xcodeproj",
-  #  scheme:           "BioLog",
-  #  export_method:    "app-store",
-  #  output_directory: "build",
-  #  output_name:      "BioLog.ipa"
-  #)
-
     # 4. 빌드 및 업로드
     build_app(
       project: "BioLog.xcodeproj", 
@@ -83,9 +74,13 @@ platform :ios do
       include_bitcode: false,
       xcodebuild_formatter: "raw",
       export_options: {
+          signingStyle: "manual",
           uploadBitcode: false,
           uploadSymbols: true,
-          compileBitcode: false
+          compileBitcode: false,
+          provisioningProfiles: { 
+            "com.Wook.BioLog" => "match AppStore com.Wook.BioLog"
+        }
       }
     )
 
