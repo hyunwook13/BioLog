@@ -1,88 +1,59 @@
-default_platform(:ios)
+name: CI Pipeline
 
-platform :ios do
-  desc "코코아팟 설치 → 테스트 → match → 키체인 셋업"
-  lane :custom_release do
-    # 2. 테스트 (실패해도 진행)
-    scan(
-      scheme: "BioLogTests",
-      project: "BioLog.xcodeproj",
-      fail_build: false,
-      skip_build: true,
-      clean: true,
-      output_types: "html,junit",
-      output_directory: "fastlane/test_output",
-      build_for_testing: true
-    )
+on:
+  push:
+    branches:
+      - main
 
-    # 3. 인증서 및 프로비저닝 프로파일 설치
-    match
+jobs:
+  build-and-release:
+    runs-on: macos-15
 
-    keychain_password = ENV["MATCH_KEYCHAIN_PASSWORD"]
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
-    UI.header("🔓 Unlocking login.keychain-db…")
-    begin
-      unlock_output = sh("security unlock-keychain -p '#{keychain_password}' ~/Library/Keychains/login.keychain-db")
-      UI.success("✅ Keychain unlocked successfully")
-    rescue => ex
-      UI.error("❌ Failed to unlock keychain: #{ex.message}")
-      raise
-    end
+      - name: Add CI platform support
+        run: bundle lock --add-platform arm64-darwin-23
 
-    UI.header("🔍 Fetching code signing identities…")
-    begin
-      identities = sh("security find-identity -v -p codesigning")
-      UI.message("🔑 Available code signing identities:\n#{identities}")
-    rescue => ex
-      UI.error("⚠️ No code signing identities found or error: #{ex.message}")
-      raise
-    end
+      - name: Setup Ruby and Cache Bundler
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          cache: bundler
 
-    UI.header("🔐 Setting key partition list for codesign…")
-    begin
-      sh("security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k '#{keychain_password}' ~/Library/Keychains/login.keychain-db")
-      UI.success("✅ Key partition list set successfully")
-    rescue => ex
-      UI.error("❌ Failed to set key partition list: #{ex.message}")
-    end
-  end
+      - name: Install Ruby Gems
+        run: |
+          gem install bundler
+          bundle install --jobs 4 --retry 3
 
-  desc "빌드 및 TestFlight 업로드만 진행"
-  lane :release_only do
-    build_app(
-      project: "BioLog.xcodeproj", 
-      scheme: "BioLog",
-      clean: true,
-      silent: true,
-      skip_package_pkg: true,
-      export_method: "app-store",
-      output_directory: "build",
-      output_name: "BioLog.ipa",
-      include_bitcode: false,
-      export_options: {
-        signingStyle: "manual",
-        uploadBitcode: false,
-        uploadSymbols: true,
-        compileBitcode: false,
-        provisioningProfiles: { 
-          "com.Wook.BioLog" => "match AppStore com.Wook.BioLog"
-        }
-      }
-    )
+      - name: Setup SSH access to GitHub
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.MATCH_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-    api_key = app_store_connect_api_key(
-      key_id: ENV["FASTLANE_APPLE_API_KEY_KEY_ID"],
-      issuer_id: ENV["FASTLANE_APPLE_API_KEY_ISSUER_ID"],
-      key_content: ENV["FASTLANE_APPLE_API_KEY_CONTENT"],
-      is_key_content_base64: true
-    )
-    UI.message("🔑 api_key: #{api_key.inspect}")
+      - name: Cache Xcode DerivedData
+        uses: actions/cache@v3
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-deriveddata-${{ hashFiles('**/Podfile.lock','**/*.xcodeproj/project.pbxproj') }}
+          restore-keys: |
+            ${{ runner.os }}-deriveddata-
 
-    pilot(
-      api_key: api_key,
-      skip_waiting_for_build_processing: true,
-      wait_processing_timeout_duration: 120,
-      ipa: "build/BioLog.ipa"
-    )
-  end
-end
+      - name: Run fastlane custom_release
+        run: bundle exec fastlane ios custom_release --verbose
+        env:
+          MATCH_KEYCHAIN_PASSWORD:             ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
+          MATCH_PASSWORD:                      ${{ secrets.MATCH_PASSWORD }}
+
+      - name: Run fastlane release_only
+        run: bundle exec fastlane ios release_only --verbose
+        env:
+          FASTLANE_APPLE_API_KEY_KEY_ID:       ${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}
+          FASTLANE_APPLE_API_KEY_CONTENT:      ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
+          FASTLANE_APPLE_API_KEY_ISSUER_ID:    ${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}
+          MATCH_KEYCHAIN_PASSWORD:             ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
