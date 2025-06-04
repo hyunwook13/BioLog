@@ -1,4 +1,5 @@
 name: CI Pipeline
+
 on:
   push:
     branches:
@@ -14,11 +15,9 @@ jobs:
         with:
           persist-credentials: false
 
-      # 1) CI 플랫폼용 lockfile 업데이트 (필요 시, Apple Silicon 지원)
       - name: Add CI platform support
         run: bundle lock --add-platform arm64-darwin-23
 
-      # 2) Ruby 및 의존성 설치
       - name: Setup Ruby and Cache Bundler
         uses: ruby/setup-ruby@v1
         with:
@@ -30,7 +29,6 @@ jobs:
           gem install bundler
           bundle install --jobs 4 --retry 3
 
-      # 3) SSH 키 설정 (match_repo 접근용)
       - name: Setup SSH access to GitHub
         run: |
           mkdir -p ~/.ssh
@@ -46,14 +44,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-deriveddata-
 
-      # 5) Fastlane 실행
       - name: Run fastlane custom_release
         run: bundle exec fastlane ios custom_release --verbose
+        env:
+          MATCH_KEYCHAIN_PASSWORD:             ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
+          MATCH_PASSWORD:                      ${{ secrets.MATCH_PASSWORD }}
+
+      - name: Run fastlane release_only
+        run: bundle exec fastlane ios release_only --verbose
         env:
           FASTLANE_APPLE_API_KEY_KEY_ID:       ${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}
           FASTLANE_APPLE_API_KEY_CONTENT:      ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
           FASTLANE_APPLE_API_KEY_ISSUER_ID:    ${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}
-          FASTLANE_USER:                       ${{ secrets.FASTLANE_USER }}
-          FASTLANE_PASSWORD:                   ${{ secrets.FASTLANE_PASSWORD }}
           MATCH_KEYCHAIN_PASSWORD:             ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
-          MATCH_PASSWORD:                      ${{ secrets.MATCH_PASSWORD }}
