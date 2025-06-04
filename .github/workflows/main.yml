@@ -10,25 +10,25 @@ jobs:
     runs-on: macos-15
 
     steps:
-      - name: Checkout Repo
+      - name: 📦 Checkout Repo
         uses: actions/checkout@v4
         with:
           persist-credentials: false
 
-      - name: Install Fastlane
+      - name: 💎 Install Fastlane
         run: gem install fastlane --no-document
 
-      - name: Setup SSH for match repo
+      - name: 🔐 Setup SSH for match repo
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.MATCH_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           
-      - name: Show Global Git Config
+      - name: 🔧 Show Global Git Config
         run: git config --global --get-regexp ^url || echo "⛔️ no override"
         
-      - name: Cache Xcode DerivedData
+      - name: 💾 Cache Xcode DerivedData
         uses: actions/cache@v3
         with:
           path: ~/Library/Developer/Xcode/DerivedData
@@ -36,11 +36,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-deriveddata-
 
-      - name: Run Fastlane custom_release
+      - name: 🚀 Run Fastlane custom_release
         run: fastlane ios custom_release --verbose
         env:
-          MATCH_PASSWORD:                      ${{ secrets.MATCH_PASSWORD }}
-          MATCH_KEYCHAIN_PASSWORD:             ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
-          FASTLANE_APPLE_API_KEY_KEY_ID:       ${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}
-          FASTLANE_APPLE_API_KEY_CONTENT:      ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
-          FASTLANE_APPLE_API_KEY_ISSUER_ID:    ${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}
+          MATCH_PAT:                          ${{ secrets.MATCH_PAT }}
+          MATCH_PASSWORD:                     ${{ secrets.MATCH_PASSWORD }}
+          MATCH_KEYCHAIN_PASSWORD:            ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
+          FASTLANE_APPLE_API_KEY_KEY_ID:      ${{ secrets.FASTLANE_APPLE_API_KEY_KEY_ID }}
+          FASTLANE_APPLE_API_KEY_CONTENT:     ${{ secrets.FASTLANE_APPLE_API_KEY_CONTENT }}
+          FASTLANE_APPLE_API_KEY_ISSUER_ID:   ${{ secrets.FASTLANE_APPLE_API_KEY_ISSUER_ID }}
+          FASTLANE_USER:                      ${{ secrets.FASTLANE_USER }}
+          FASTLANE_TEAM_ID:                   ${{ secrets.FASTLANE_TEAM_ID }}
