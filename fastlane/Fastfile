@@ -81,7 +81,7 @@ platform :ios do
     )
     UI.message("🔑 api_key: #{api_key.inspect}")
 
-latest_number = latest_testflight_build_number(app_identifier: "com.wook.BioLog") || 0
+latest_number = latest_testflight_build_number(app_identifier: "com.Wook.BioLog") || 0
 new_build_number = latest_number + 1
 
 increment_build_number(
