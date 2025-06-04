@@ -15,6 +15,7 @@ platform :ios do
       build_for_testing: true
     )
 
+    setup_ci
     # 3. 인증서 및 프로비저닝 프로파일 설치
     match
 
