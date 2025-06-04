@@ -1,8 +1,7 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "코코아팟 설치 → 테스트 → match → 빌드 및 TestFlight 업로드"
-
+  desc "코코아팟 설치 → 테스트 → match → 키체인 셋업"
   lane :custom_release do
     # 2. 테스트 (실패해도 진행)
     scan(
@@ -14,24 +13,13 @@ platform :ios do
       output_types: "html,junit",
       output_directory: "fastlane/test_output",
       build_for_testing: true
-      # destination: "platform=iOS Simulator,name=iPhone 16 Pro,OS=18.1"
     )
-
-
 
     # 3. 인증서 및 프로비저닝 프로파일 설치
     match
-#(
- #     type: "appstore",
-  #    readonly: true,
-   #   git_url: "git@github.com:hyunwook13/match_repo.git"
-   #   #clone_branch_directly: true
-   # )
 
-  # 2) 키체인 언락 (CI 환경이면 꼭 필요)
     keychain_password = ENV["MATCH_KEYCHAIN_PASSWORD"]
 
-    # 2-1. 로그인 키체인 언락 시도 (단일 따옴표로 감싸서 '!' 문제 방지)
     UI.header("🔓 Unlocking login.keychain-db…")
     begin
       unlock_output = sh("security unlock-keychain -p '#{keychain_password}' ~/Library/Keychains/login.keychain-db")
@@ -41,7 +29,6 @@ platform :ios do
       raise
     end
 
-    # 2-2. 인증서 목록 조회해서 출력
     UI.header("🔍 Fetching code signing identities…")
     begin
       identities = sh("security find-identity -v -p codesigning")
@@ -51,35 +38,34 @@ platform :ios do
       raise
     end
 
-    # 2-3. 개인 키에 codesign 권한 강제 부여 (단일 따옴표로 감싸기)
     UI.header("🔐 Setting key partition list for codesign…")
     begin
       sh("security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k '#{keychain_password}' ~/Library/Keychains/login.keychain-db")
       UI.success("✅ Key partition list set successfully")
     rescue => ex
       UI.error("❌ Failed to set key partition list: #{ex.message}")
-      # 필요에 따라 raise 해도 되고, 서명 단계에서 다시 확인 가능
     end
+  end
 
-    # 4. 빌드 및 업로드
+  desc "빌드 및 TestFlight 업로드만 진행"
+  lane :release_only do
     build_app(
       project: "BioLog.xcodeproj", 
       scheme: "BioLog",
       clean: true,
       silent: true,
       skip_package_pkg: true,
-      export_method:    "app-store",
+      export_method: "app-store",
       output_directory: "build",
-      output_name:      "BioLog.ipa",
+      output_name: "BioLog.ipa",
       include_bitcode: false,
-     # xcodebuild_formatter: "raw",
       export_options: {
-          signingStyle: "manual",
-          uploadBitcode: false,
-          uploadSymbols: true,
-          compileBitcode: false,
-          provisioningProfiles: { 
-            "com.Wook.BioLog" => "match AppStore com.Wook.BioLog"
+        signingStyle: "manual",
+        uploadBitcode: false,
+        uploadSymbols: true,
+        compileBitcode: false,
+        provisioningProfiles: { 
+          "com.Wook.BioLog" => "match AppStore com.Wook.BioLog"
         }
       }
     )
