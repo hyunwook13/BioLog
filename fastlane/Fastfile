@@ -49,16 +49,16 @@ platform :ios do
 
   desc "빌드 및 TestFlight 업로드만 진행"
   lane :release_only do
-    build_app(
-      project: "BioLog.xcodeproj", 
-      scheme: "BioLog",
-      clean: true,
-      silent: true,
-      skip_package_pkg: true,
-      export_method: "app-store",
-      output_directory: "build",
-      output_name: "BioLog.ipa",
-      skip_codesigning: true
+ #   build_app(
+ #     project: "BioLog.xcodeproj", 
+ #     scheme: "BioLog",
+ #     clean: true,
+ #     silent: true,
+ #    skip_package_pkg: true,
+ #     export_method: "app-store",
+ #     output_directory: "build",
+ #     output_name: "BioLog.ipa",
+ #     skip_codesigning: true
 
      # include_bitcode: false,
      # export_options: {
@@ -70,7 +70,31 @@ platform :ios do
      #     "com.Wook.BioLog" => "match AppStore com.Wook.BioLog"
      #   }
     #  }
-    )
+#    )
+
+build_app(
+  project: "BioLog.xcodeproj", 
+  scheme: "BioLog",
+  clean: true,
+  silent: true,
+  skip_package_pkg: true,
+  export_method: "app-store",
+  export_options: {
+    signingStyle: "manual",
+    provisioningProfiles: {
+      "com.Wook.BioLog" => "match AppStore com.Wook.BioLog"
+    },
+    teamID: "D49753ZB3N", # 명시적으로 지정
+    compileBitcode: false,
+    uploadSymbols: true,
+    uploadBitcode: false
+  },
+  export_xcargs: [
+    "CODE_SIGN_IDENTITY='Apple Distribution: Hyun Wook Lee (D49753ZB3N)'",
+    "DEVELOPMENT_TEAM=D49753ZB3N",
+    "PROVISIONING_PROFILE_SPECIFIER='match AppStore com.Wook.BioLog'"
+  ].join(" ")
+)
 
     api_key = app_store_connect_api_key(
       key_id: ENV["FASTLANE_APPLE_API_KEY_KEY_ID"],
