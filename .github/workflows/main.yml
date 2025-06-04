@@ -26,7 +26,7 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           
       - name: Show Global Git Config
-        run: ggit config --global --get-regexp ^url
+        run: git config --global --get-regexp ^url || echo "⛔️ no override"
         
       - name: Cache Xcode DerivedData
         uses: actions/cache@v3
