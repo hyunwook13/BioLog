@@ -75,7 +75,7 @@ platform :ios do
 build_app(
   project: "BioLog.xcodeproj", 
   scheme: "BioLog",
-  clean: true,
+  # clean: true,
   silent: true,
   skip_package_pkg: true,
   export_method: "app-store",
