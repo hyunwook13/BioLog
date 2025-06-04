@@ -80,6 +80,8 @@ build_app(
   silent: true,
   skip_package_pkg: true,
   export_method: "app-store",
+  output_directory: "build",
+  output_name: "BioLog.ipa",
   export_options: {
     signingStyle: "manual",
     provisioningProfiles: {
