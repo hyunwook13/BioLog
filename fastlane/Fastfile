@@ -58,16 +58,16 @@ platform :ios do
       export_method: "app-store",
       output_directory: "build",
       output_name: "BioLog.ipa",
-      include_bitcode: false,
-      export_options: {
-        signingStyle: "manual",
-        uploadBitcode: false,
-        uploadSymbols: true,
-        compileBitcode: false,
-        provisioningProfiles: { 
-          "com.Wook.BioLog" => "match AppStore com.Wook.BioLog"
-        }
-      }
+     # include_bitcode: false,
+     # export_options: {
+     #   signingStyle: "manual",
+     #   uploadBitcode: false,
+     #   uploadSymbols: true,
+     #   compileBitcode: false,
+     #   provisioningProfiles: { 
+     #     "com.Wook.BioLog" => "match AppStore com.Wook.BioLog"
+     #   }
+    #  }
     )
 
     api_key = app_store_connect_api_key(
