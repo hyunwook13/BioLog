@@ -4,7 +4,7 @@ platform :ios do
   desc "코코아팟 설치 → 테스트 → 인증서 설치 → 빌드 및 TestFlight 업로드"
   lane :custom_release do
 
-    # ✅ 테스트 실행 (실패해도 계속 진행)
+    # 1. 테스트 실행 (실패해도 계속 진행)
     scan(
       scheme: "BioLogTests",
       project: "BioLog.xcodeproj",
@@ -16,10 +16,10 @@ platform :ios do
       build_for_testing: true
     )
 
-    # ✅ CI 설정
+    # 2. CI 설정
     setup_ci
 
-    # ✅ match 실행 전 디버깅 로그 출력
+    # 3. match 전 디버깅 로그
     UI.header("🔍 ENV 상태 점검 (match 전)")
     {
       "MATCH_PAT" => ENV['MATCH_PAT'],
@@ -31,6 +31,7 @@ platform :ios do
       UI.message("  🔹 #{key}: #{value ? '✅ SET' : '❌ NOT SET'}")
     end
 
+    # 4. Matchfile 유무 확인 (없어도 상관없음)
     matchfile_path = "fastlane/Matchfile"
     if File.exist?(matchfile_path)
       UI.message("📄 Matchfile 존재함")
@@ -39,23 +40,31 @@ platform :ios do
       UI.important("❗️ Matchfile이 존재하지 않음")
     end
 
-    test_git_url = "https://hyunwook13:#{ENV['MATCH_PAT']}@github.com/hyunwook13/match_repo.git"
-    safe_git_url = test_git_url.gsub(/:.*@/, ':***@')
+    # 5. git_url 조합 및 인증 테스트
+    test_git_url  = "https://hyunwook13:#{ENV['MATCH_PAT']}@github.com/hyunwook13/match_repo.git"
+    safe_git_url  = test_git_url.gsub(/:.*@/, ':***@')
     UI.message("🔗 Git URL: #{safe_git_url}")
 
     begin
-      UI.message("🧪 Git 인증 테스트 (ls-remote)")
       sh("git ls-remote #{test_git_url}")
       UI.success("✅ Git 인증 성공")
     rescue => e
       UI.error("❌ Git 인증 실패: #{e.message}")
+      return
     end
 
     UI.header("🚀 인증서 및 프로비저닝 프로파일 설치 (match) 시작")
 
-    # ✅ 인증서 및 프로비저닝 프로파일 설치
+    # 6. match 호출 (Fastfile에서 git_url 지정)
     begin
-      match
+      match(
+        git_url:       test_git_url,
+        type:          "appstore",
+        readonly:      true,
+        shallow_clone: true,
+        verbose:       true,
+        skip_docs:     true
+      )
       UI.success("🎉 match 성공")
     rescue => error
       UI.error("💥 match 실패!")
@@ -64,7 +73,7 @@ platform :ios do
       raise error
     end
 
-    # ✅ App Store Connect API 키 설정
+    # 7. App Store Connect API 키 설정
     api_key = app_store_connect_api_key(
       key_id: ENV["FASTLANE_APPLE_API_KEY_KEY_ID"],
       issuer_id: ENV["FASTLANE_APPLE_API_KEY_ISSUER_ID"],
@@ -73,7 +82,7 @@ platform :ios do
     )
     UI.message("🔑 api_key: #{api_key.inspect}")
 
-    # ✅ 빌드 번호 증가
+    # 8. 빌드 번호 증가
     latest_number    = latest_testflight_build_number(app_identifier: "com.Wook.BioLog") || 0
     new_build_number = latest_number + 1
 
@@ -82,7 +91,7 @@ platform :ios do
       build_number: new_build_number
     )
 
-    # ✅ 앱 빌드
+    # 9. 앱 빌드
     build_app(
       project: "BioLog.xcodeproj",
       scheme: "BioLog",
@@ -108,7 +117,7 @@ platform :ios do
       ].join(" ")
     )
 
-    # ✅ TestFlight 업로드
+    # 10. TestFlight 업로드
     pilot(
       api_key: api_key,
       skip_waiting_for_build_processing: true,
