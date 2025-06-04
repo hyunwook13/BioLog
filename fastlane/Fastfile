@@ -72,7 +72,7 @@ platform :ios do
       output_directory: "build",
       output_name:      "BioLog.ipa",
       include_bitcode: false,
-      xcodebuild_formatter: "raw",
+     # xcodebuild_formatter: "raw",
       export_options: {
           signingStyle: "manual",
           uploadBitcode: false,
