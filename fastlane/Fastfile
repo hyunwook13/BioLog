@@ -58,6 +58,8 @@ platform :ios do
       export_method: "app-store",
       output_directory: "build",
       output_name: "BioLog.ipa",
+      skip_codesigning: true
+
      # include_bitcode: false,
      # export_options: {
      #   signingStyle: "manual",
