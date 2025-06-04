@@ -19,8 +19,50 @@ platform :ios do
     # ✅ CI 설정
     setup_ci
 
+    # ✅ match 실행 전 디버깅 로그 출력
+    UI.header("🔍 ENV 상태 점검 (match 전)")
+    {
+      "MATCH_PAT" => ENV['MATCH_PAT'],
+      "FASTLANE_USER" => ENV['FASTLANE_USER'],
+      "FASTLANE_TEAM_ID" => ENV['FASTLANE_TEAM_ID'],
+      "MATCH_KEYCHAIN_NAME" => ENV['MATCH_KEYCHAIN_NAME'],
+      "MATCH_KEYCHAIN_PASSWORD" => ENV['MATCH_KEYCHAIN_PASSWORD']
+    }.each do |key, value|
+      UI.message("  🔹 #{key}: #{value ? '✅ SET' : '❌ NOT SET'}")
+    end
+
+    matchfile_path = "fastlane/Matchfile"
+    if File.exist?(matchfile_path)
+      UI.message("📄 Matchfile 존재함")
+      UI.message(File.read(matchfile_path)[/git_url\([^\)]*\)/] || "📌 git_url 없음")
+    else
+      UI.important("❗️ Matchfile이 존재하지 않음")
+    end
+
+    test_git_url = "https://hyunwook13:#{ENV['MATCH_PAT']}@github.com/hyunwook13/match_repo.git"
+    safe_git_url = test_git_url.gsub(/:.*@/, ':***@')
+    UI.message("🔗 Git URL: #{safe_git_url}")
+
+    begin
+      UI.message("🧪 Git 인증 테스트 (ls-remote)")
+      sh("git ls-remote #{test_git_url}")
+      UI.success("✅ Git 인증 성공")
+    rescue => e
+      UI.error("❌ Git 인증 실패: #{e.message}")
+    end
+
+    UI.header("🚀 인증서 및 프로비저닝 프로파일 설치 (match) 시작")
+
     # ✅ 인증서 및 프로비저닝 프로파일 설치
-    match
+    begin
+      match
+      UI.success("🎉 match 성공")
+    rescue => error
+      UI.error("💥 match 실패!")
+      UI.error("에러 메시지: #{error.message}")
+      UI.message("🧵 스택:\n#{error.backtrace.take(5).join("\n")}")
+      raise error
+    end
 
     # ✅ App Store Connect API 키 설정
     api_key = app_store_connect_api_key(
