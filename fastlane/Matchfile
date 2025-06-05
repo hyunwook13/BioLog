@@ -1,6 +1,6 @@
 # fastlane/Matchfile
-
-git_url("https://hyunwook13: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@github.com/hyunwook13/match_repo.git")
+ 
+git_url("https://hyunwook13:#{ENV['MATCH_PAT']}@github.com/hyunwook13/match_repo.git")
 
 # 2) 브랜치
 git_branch("master")
