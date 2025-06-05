@@ -57,14 +57,15 @@ platform :ios do
 
     # 6. match 호출 (Fastfile에서 git_url 지정)
     begin
-      match(
-        git_url:       test_git_url,
-        type:          "appstore",
-        readonly:      true,
-        shallow_clone: true,
-        verbose:       true,
-        skip_docs:     true
-      )
+      match
+     # match(
+     #   git_url:       test_git_url,
+     #   type:          "appstore",
+     #   readonly:      true,
+     #   shallow_clone: true,
+     #  verbose:       true,
+     #   skip_docs:     true
+     # )
       UI.success("🎉 match 성공")
     rescue => error
       UI.error("💥 match 실패!")
