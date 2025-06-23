@@ -1,126 +1,50 @@
 
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a id="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
+# 📚 BioLog — 문학 속 인물을 기억하는 가장 스마트한 방법
 
+> **"Never lose track of characters again."**  
+> BioLog는 인물 중심으로 독서 경험을 향상시키는 iOS 앱입니다.  
+> 복잡한 등장인물, 얽힌 관계, 장대한 시리즈도 BioLog와 함께라면 문제없습니다.
 
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-
-
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <h3 align="center">BioLog</h3>
-
-  <p align="center">
-    인물 중심으로 책에 몰입할 수 있게 해주는 문학 로그북
-</div>
-
-
-
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#biolog-never-lose-track-of-characters-again">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#develop-environment">Develop Environment</a>
-    </li>
-    <li>
-      <a href="#roadmap">Roadmap</a>
-    </li>
-    <li>
-      <a href="#license">License</a></li>
-  </ol>
-</details>
-
-
-
-<!-- ABOUT THE PROJECT -->
-
-# BioLog: Never Lose Track of Characters Again
-
-Many reading apps exist, but none solve the character management problem in literature. BioLog is different—it's the character companion you've been waiting for.
-
-Reading lengthy novels means encountering countless characters that become impossible to remember. Complex relationships and evolving characters often force you to flip back through pages, diminishing enjoyment and sometimes leading to abandoned books.
-
-Here's why:
-* You shouldn't need to flip back and forth trying to remember who's who in complex novels
-* Your reading experience shouldn't be interrupted by forgetting character relationships
-* You shouldn't lose track of character development across long series or when taking breaks
-* You should be able to easily organize characters from multiple books simultaneously
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-### Develop Environment
 <p align="center">
-  <img src="https://img.shields.io/static/v1?style=for-the-badge&logo=swift&message=SWIFT5&label=&color=FA7343&labelColor=000000" alt="SWIFT">
-  <br>
-  iOS Deployment Target : <b>iOS 15.0+</b>
+  <img src="https://img.shields.io/badge/iOS-15.0+-blue?style=for-the-badge&logo=apple">
+  <img src="https://img.shields.io/badge/Swift-5-orange?style=for-the-badge&logo=swift">
+  <img src="https://img.shields.io/badge/RxSwift-enabled-green?style=for-the-badge">
 </p>
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- GETTING STARTED -->
-## Built With
+## ✨ 주요 기능
 
-### Architecture
-* 🏗Clean Architecture
-* 📱 MVVM-C Pattern
+- 🧠 **인물 중심 독서 기록**  
+  각 등장인물의 성격, 배경, 변화 과정을 한눈에 기록하고 추적할 수 있어요.
 
-### UI
-* 📐 SnapKit (5.6.0) - Programmatic Auto Layout
+- 🧩 **관계도 자동 구성**  
+  인물 간 상호작용을 기반으로 관계도를 시각화해주는 기능.
 
-### Reactive Programming
-* ⚡ RxSwift (6.6.0)
-* 🔄 RxCocoa (6.6.0)
-* 📊 RxDataSources (5.0.0)
-### Persistence
-* 💾 CoreData - Local data storage (iOS 15.6+)
+- 📚 **책 별 / 시리즈 별 분류**  
+  여러 책의 인물을 한 계정에서 나눠서 관리 가능.
 
-### Tools & Testing
-* 🧪 XCTest - Unit Testing
-* 📱 XCUITest - UI Testing
-
-<!-- ROADMAP -->
-## Roadmap
-- [x] Books I Want to Buy
-- [x] Favorite Books
-- [ ] Sharing (Text/Speech)
-- [ ] Statistics
-- [ ] AI
-- [ ] Login
-- [ ] Onboarding
-- [ ] Multi-language Support
-    - [ ] Chinese
-    - [ ] Spanish
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- LICENSE -->
-## License
-
-Distributed under the Unlicense License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+- 💾 **오프라인 저장 + 클라우드 연동**  
+  CoreData 기반 저장 + 로그인 기능으로 확장 중.
 
 
+## 🛠️ 기술 스택
+
+| 분야             | 사용 기술 |
+|------------------|-----------|
+| UI               | `SwiftUI`, `SnapKit` (UIKit 베이스) |
+| 아키텍처         | Clean Architecture, MVVM-C |
+| 반응형 프로그래밍 | `RxSwift`, `RxCocoa`, `RxDataSources` |
+| 영속성           | `CoreData` |
+| 테스트           | `XCTest`, `XCUITest` |
+
+
+## 🚀 프로젝트 구조
+```
+📦 BioLog
+     └─ Source
+          ├─ Applications
+          ├─ Data
+          ├─ Domain
+          ├─ Infrastructure/Network
+          └─ Presentation
+     └─ Test
