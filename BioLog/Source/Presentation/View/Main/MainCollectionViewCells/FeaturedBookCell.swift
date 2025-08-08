@@ -55,7 +55,7 @@ class FeaturedBookCell: UICollectionViewCell {
         contentView.addSubview(progressView)
         
         coverImageView.snp.makeConstraints { make in
-            make.left.top.bottom.equalToSuperview().inset(8)
+            make.left.top.bottom.equalToSuperview()
             make.width.equalTo(138)
         }
         

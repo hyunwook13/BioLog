@@ -59,7 +59,7 @@
 
 # BioLog: Never Lose Track of Characters Again
 
-Many reading apps exist, but none solve the character management problem in literature. BioLog is different—it's the character companion you've been waiting for.
+Many reading apps exist, but none solve the character management problem in literature. BioLog is different—it's the character companion you've been w for.
 
 Reading lengthy novels means encountering countless characters that become impossible to remember. Complex relationships and evolving characters often force you to flip back through pages, diminishing enjoyment and sometimes leading to abandoned books.
 
