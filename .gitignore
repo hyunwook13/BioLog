@@ -182,3 +182,16 @@ xcuserdata
 !BioLog.xcodeproj/**
 ./coverage
 # End of https://www.toptal.com/developers/gitignore/api/xcode,swiftpm,swiftpackagemanager,cocoapods,swift,fastlane,macos
+# secrets
+*.p8
+*.p12
+*.json
+.env*
+fastlane/*.p8
+fastlane/api_key.json
+certs/
+
+# security
+*.sarif
+*.json
+replacements.txt
